@@ -1,0 +1,149 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String     @id @default(cuid())
+  email                String     @unique
+  name                 String?
+  passwordHash         String?
+  disclaimerAcceptedAt DateTime?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  cats                 Cat[]
+  logs                 Log[]
+  reminders            Reminder[]
+  media                Media[]
+
+  @@map("users")
+}
+
+model Cat {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  birthDate DateTime?  @db.Date
+  weightKg  Decimal?   @db.Decimal(6, 2)
+  photoUrl  String?
+  notes     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  logs      Log[]
+  reminders Reminder[]
+  media     Media[]
+
+  @@index([userId])
+  @@map("cats")
+}
+
+model Log {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catId         String
+  cat           Cat           @relation(fields: [catId], references: [id], onDelete: Cascade)
+  loggedOn      DateTime      @db.Date
+  appetite      Appetite?
+  foodNote      String?
+  water         WaterIntake?
+  stoolCount    Int?
+  stoolQuality  StoolQuality?
+  urine         Urine?
+  vomit         Boolean?
+  vomitNote     String?
+  vomitPhotoUrl String?
+  energy        Energy?
+  weightKg      Decimal?      @db.Decimal(6, 2)
+  memo          String?
+  photoUrl      String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  media         Media[]
+
+  @@unique([catId, loggedOn])
+  @@index([userId, loggedOn])
+  @@index([userId, catId])
+  @@map("logs")
+}
+
+model Reminder {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catId       String?
+  cat         Cat?         @relation(fields: [catId], references: [id], onDelete: Cascade)
+  type        ReminderType
+  title       String
+  dueOn       DateTime     @db.Date
+  notes       String?
+  completedAt DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([userId, dueOn])
+  @@map("reminders")
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catId     String?
+  cat       Cat?     @relation(fields: [catId], references: [id], onDelete: SetNull)
+  logId     String?
+  log       Log?     @relation(fields: [logId], references: [id], onDelete: SetNull)
+  url       String
+  kind      String   @default("photo")
+  filename  String?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("media")
+}
+
+enum Appetite {
+  NONE
+  LOW
+  NORMAL
+  HIGH
+}
+
+enum WaterIntake {
+  LITTLE
+  NORMAL
+  MUCH
+}
+
+enum StoolQuality {
+  NONE
+  HARD
+  NORMAL
+  SOFT
+  DIARRHEA
+}
+
+enum Urine {
+  LITTLE
+  NORMAL
+  MUCH
+  BLOOD
+}
+
+enum Energy {
+  LOW
+  NORMAL
+  HIGH
+}
+
+enum ReminderType {
+  MEDS
+  VACCINE
+  DEWORMING
+  LITTER_CHANGE
+}
