@@ -23,10 +23,9 @@ export default async function LandingPage() {
 
       <ul className="mt-8 space-y-3 text-sm leading-6">
         {[
-          "멀티캣 프로필과 오늘 한눈에 보기",
+          "계정 없이 고양이 두 마리까지 바로 기록",
           "달력 · 7일/30일 그래프",
-          "약·백신·구충·모래 전체갈이 알림",
-          "한글 병원 리포트와 CSV 내보내기",
+          "가입하면 병원 리포트, CSV, 돌봄 일정, 클라우드 동기화",
         ].map((item) => (
           <li key={item} className="card px-4 py-3">
             {item}
@@ -35,10 +34,13 @@ export default async function LandingPage() {
       </ul>
 
       <div className="mt-8 flex flex-col gap-3">
-        <Link href="/register" className="btn-primary">
-          무료로 시작하기
+        <Link href="/home" className="btn-primary">
+          계정 없이 먼저 기록하기
         </Link>
-        <Link href="/login" className="btn-ghost">
+        <Link href="/register" className="btn-ghost">
+          무료 계정 만들기
+        </Link>
+        <Link href="/login" className="text-center text-sm font-bold text-accent">
           이미 계정이 있어요
         </Link>
       </div>

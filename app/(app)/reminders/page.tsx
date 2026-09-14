@@ -4,11 +4,14 @@ import { EmptyState, PageHeader } from "@/components/ui";
 import { displayDate, todayKey } from "@/lib/dates";
 import { reminderLabels } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
+import { GuestRemindersPage } from "@/components/guest/guest-settings";
 import { serializeCat, serializeReminder } from "@/lib/serialize";
-import { requireUserId } from "@/lib/session";
+import { getSessionUser } from "@/lib/session";
 
 export default async function RemindersPage() {
-  const userId = await requireUserId();
+  const user = await getSessionUser();
+  if (!user?.id) return <GuestRemindersPage />;
+  const userId = user.id;
   const [cats, reminders] = await Promise.all([
     prisma.cat.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }).then((rows) => rows.map(serializeCat)),
     prisma.reminder.findMany({ where: { userId }, orderBy: [{ completedAt: "asc" }, { dueOn: "asc" }] }).then((rows) =>

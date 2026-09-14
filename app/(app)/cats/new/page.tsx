@@ -1,7 +1,12 @@
 import { createCatAction } from "@/app/actions/cats";
+import { GuestNewCatForm } from "@/components/guest/guest-cat-form";
 import { PageHeader } from "@/components/ui";
+import { getSessionUser } from "@/lib/session";
 
-export default function NewCatPage() {
+export default async function NewCatPage() {
+  const user = await getSessionUser();
+  if (!user?.id) return <GuestNewCatForm />;
+
   return (
     <>
       <PageHeader title="고양이 등록" subtitle="이름만 필수예요. 나머지는 나중에 채워도 돼요." />
