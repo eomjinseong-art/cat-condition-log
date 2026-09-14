@@ -1,20 +1,27 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { DisclaimerGate } from "@/components/disclaimer-gate";
 import { GuestGateProvider, useGuestActions, useGuestGate, useGuestHydrated } from "@/components/guest/guest-runtime";
 import { SignupPrompt } from "@/components/guest/signup-prompt";
+import { DISCLAIMER } from "@/lib/constants";
 
 function GuestDisclaimer() {
   const hydrated = useGuestHydrated();
   const { snapshot, acceptDisclaimer } = useGuestActions();
   if (!hydrated || snapshot.disclaimerAcceptedAt) return null;
   return (
-    <DisclaimerGate
-      onAccept={() => {
-        acceptDisclaimer();
-      }}
-    />
+    <div className="fixed inset-0 z-50 flex items-end bg-black/40 p-4 sm:items-center">
+      <div className="card mx-auto w-full max-w-md p-5" role="dialog" aria-modal="true" aria-labelledby="guest-disclaimer-title">
+        <p className="text-xs font-bold tracking-wide text-accent">꼭 읽어 주세요</p>
+        <h2 id="guest-disclaimer-title" className="mt-2 text-xl font-extrabold">
+          기록 도구 안내
+        </h2>
+        <p className="mt-3 text-sm leading-7 text-ink-soft">{DISCLAIMER}</p>
+        <button className="btn-primary mt-5 w-full" type="button" onClick={() => acceptDisclaimer()}>
+          이해했어요
+        </button>
+      </div>
+    </div>
   );
 }
 

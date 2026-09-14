@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { selectCatAction } from "@/app/actions/cats";
 import { DailyLog } from "@/components/daily-log";
 import { CatPicker, StickyCatBar } from "@/components/cat-picker";
 import { GuestHome } from "@/components/guest/guest-home";

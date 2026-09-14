@@ -2,7 +2,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { GuestShell } from "@/components/guest/guest-shell";
 import { PartnerLinks } from "@/components/partner-links";
 
-/** Unauthenticated app chrome. Logged-in disclaimer stays in `(app)/layout.tsx`. */
+/** Unauthenticated app chrome. Logged-in users go through `(app)/layout.tsx`. */
 export function GuestAppFrame({ children }: { children: React.ReactNode }) {
   return (
     <div className="mx-auto min-h-dvh max-w-lg px-4 pb-[calc(5.75rem+env(safe-area-inset-bottom))] pt-6">
