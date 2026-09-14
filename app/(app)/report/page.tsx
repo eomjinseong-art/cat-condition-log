@@ -62,7 +62,7 @@ export default async function ReportPage({
       <div className="no-print">
         <PageHeader title="병원 리포트" subtitle="입력한 숫자만 모아요. 진단 문장은 넣지 않아요." />
         <Notice>{DISCLAIMER}</Notice>
-        <form className="card mt-4 grid gap-3 p-4">
+        <form method="get" action="/report" className="card mt-4 grid gap-3 p-4">
           <label className="text-sm font-bold">
             고양이
             <select name="catId" defaultValue={cat.id} className="field mt-1">

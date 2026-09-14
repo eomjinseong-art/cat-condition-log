@@ -1,9 +1,8 @@
 import { redirect } from "next/navigation";
 import { BottomNav } from "@/components/bottom-nav";
-import { DisclaimerGate } from "@/components/disclaimer-gate";
 import { PartnerLinks } from "@/components/partner-links";
 import { prisma } from "@/lib/prisma";
-import { requireUserId } from "@/lib/session";
+import { hasDisclaimerCookie, requireUserId } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +17,9 @@ export default async function AppLayout({
     select: { disclaimerAcceptedAt: true },
   });
   if (!user) redirect("/login");
+  if (!user.disclaimerAcceptedAt && !(await hasDisclaimerCookie())) {
+    redirect("/disclaimer");
+  }
 
   return (
     <div className="mx-auto min-h-dvh max-w-lg px-4 pb-24 pt-6">
@@ -26,7 +28,6 @@ export default async function AppLayout({
         <PartnerLinks variant="footer" />
       </footer>
       <BottomNav />
-      {user.disclaimerAcceptedAt ? null : <DisclaimerGate />}
     </div>
   );
 }

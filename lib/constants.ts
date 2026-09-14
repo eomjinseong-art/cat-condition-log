@@ -7,3 +7,4 @@ export const DISCLAIMER =
 export const TIMEZONE = "Asia/Seoul";
 
 export const SELECTED_CAT_COOKIE = "selectedCatId";
+export const DISCLAIMER_COOKIE = "disclaimerAccepted";

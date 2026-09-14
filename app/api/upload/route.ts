@@ -1,9 +1,13 @@
 import { blobConfigured, uploadPhoto } from "@/lib/blob";
 import { prisma } from "@/lib/prisma";
-import { requireOwnedCat, requireUserId } from "@/lib/session";
+import { getSessionUser, requireOwnedCat } from "@/lib/session";
 
 export async function POST(request: Request) {
-  const userId = await requireUserId();
+  const user = await getSessionUser();
+  if (!user?.id) {
+    return Response.json({ error: "로그인이 필요해요." }, { status: 401 });
+  }
+  const userId = user.id;
   if (!blobConfigured()) {
     return Response.json(
       {

@@ -116,7 +116,12 @@ export default async function HomePage({
         </Link>
       ) : null}
 
-      <DailyLog catId={current.id} loggedOn={loggedOn} initial={currentLog} />
+      <DailyLog
+        key={`${current.id}-${loggedOn}`}
+        catId={current.id}
+        loggedOn={loggedOn}
+        initial={currentLog}
+      />
 
       {currentLog?.stoolQuality ? (
         <p className="mt-4 text-xs text-ink-soft">
