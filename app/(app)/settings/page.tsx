@@ -47,7 +47,7 @@ export default async function SettingsPage() {
 
       <form action={deleteAccountAction} className="mt-8">
         <p className="mb-2 text-xs leading-5 text-ink-soft">
-          계정 삭제는 고양이, 기록, 일정, 사진 메타데이터를 함께 지워요. 되돌릴 수 없어요.
+          계정 삭제는 고양이, 기록, 일정 데이터를 함께 지워요. 되돌릴 수 없어요.
         </p>
         <ConfirmSubmit
           message="계정과 모든 고양이 기록이 삭제돼요. 정말 진행할까요?"

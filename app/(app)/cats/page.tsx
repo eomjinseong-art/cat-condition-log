@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { CatAvatar } from "@/components/cat-picker";
 import { EmptyState, PageHeader } from "@/components/ui";
+import { catColor } from "@/lib/cat-colors";
 import { ageLabel } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
 import { serializeCat } from "@/lib/serialize";
@@ -10,12 +12,13 @@ export default async function CatsPage() {
   const cats = (await prisma.cat.findMany({ where: { userId }, orderBy: { createdAt: "asc" } })).map(
     serializeCat,
   );
+  const ids = cats.map((cat) => cat.id);
 
   return (
     <>
       <PageHeader
         title="고양이"
-        subtitle="여러 마리면 홈에서 오늘 현황이 같이 보여요."
+        subtitle="여러 마리면 홈·달력·그래프에서 바로 바꿔 볼 수 있어요."
         action={
           <Link href="/cats/new" className="btn-primary px-4 text-sm">
             추가
@@ -34,14 +37,12 @@ export default async function CatsPage() {
           {cats.map((cat) => (
             <li key={cat.id}>
               <Link href={`/cats/${cat.id}`} className="card flex items-center gap-3 p-4">
-                {cat.photoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={cat.photoUrl} alt="" className="h-14 w-14 rounded-2xl object-cover" />
-                ) : (
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sage-soft text-xl">
-                    🐱
-                  </div>
-                )}
+                <CatAvatar
+                  name={cat.name}
+                  photoUrl={cat.photoUrl}
+                  color={catColor(cat.id, ids).hex}
+                  size="lg"
+                />
                 <div>
                   <p className="font-extrabold">{cat.name}</p>
                   <p className="text-sm text-ink-soft">

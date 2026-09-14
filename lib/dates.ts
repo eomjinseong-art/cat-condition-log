@@ -109,3 +109,31 @@ export function parseYearMonth(value?: string) {
   }
   return { year: Number(value.slice(0, 4)), monthIndex: Number(value.slice(5, 7)) - 1 };
 }
+
+export function daysInMonth(year: number, month: number) {
+  return new Date(Date.UTC(year, month, 0)).getUTCDate();
+}
+
+export function composeDateKey(year: number, month: number, day: number) {
+  const y = Math.trunc(year);
+  const m = Math.min(12, Math.max(1, Math.trunc(month)));
+  const dim = daysInMonth(y, m);
+  const d = Math.min(dim, Math.max(1, Math.trunc(day)));
+  return `${String(y).padStart(4, "0")}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
+export function parseDateParts(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    const today = todayKey();
+    return {
+      year: Number(today.slice(0, 4)),
+      month: Number(today.slice(5, 7)),
+      day: Number(today.slice(8, 10)),
+    };
+  }
+  return {
+    year: Number(value.slice(0, 4)),
+    month: Number(value.slice(5, 7)),
+    day: Number(value.slice(8, 10)),
+  };
+}
