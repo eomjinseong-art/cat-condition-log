@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { DailyLog } from "@/components/daily-log";
+import { GuestDailyLog } from "@/components/guest/guest-daily-log";
 import { GuestLoading, GuestLocalBanner } from "@/components/guest/guest-shell";
 import { RelatedResources } from "@/components/partner-links";
 import { EmptyState, PageHeader } from "@/components/ui";
@@ -105,13 +105,12 @@ export function GuestHome({ date }: { date?: string }) {
         </p>
       ) : null}
 
-      <DailyLog
+      <GuestDailyLog
         key={`${current.id}-${loggedOn}`}
         catId={current.id}
         loggedOn={loggedOn}
         initial={currentLog}
-        saveLog={async (payload) => saveLog(payload)}
-        hidePhotos
+        saveLog={saveLog}
       />
 
       {currentLog?.stoolQuality ? (

@@ -117,10 +117,6 @@ export function useGuestGate() {
   return ctx;
 }
 
-export function useOptionalGuestGate() {
-  return useContext(GuestGateContext);
-}
-
 export function useGuestActions() {
   const snapshot = useGuestSnapshot();
 
