@@ -1,3 +1,4 @@
+import { RelatedResources } from "@/components/partner-links";
 import { DISCLAIMER } from "@/lib/constants";
 import { displayDate } from "@/lib/dates";
 import { reminderLabels } from "@/lib/labels";
@@ -72,6 +73,10 @@ export function ReportDocument({ report }: { report: BuiltReport }) {
           </ol>
         )}
       </section>
+
+      <footer className="px-1 pt-1">
+        <RelatedResources context="report" />
+      </footer>
     </article>
   );
 }

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { upsertLogAction } from "@/app/actions/logs";
 import { LogPhoto } from "@/components/log-photo";
+import { RelatedResources } from "@/components/partner-links";
 import { ChipButton, SectionTitle } from "@/components/ui";
 import { appetiteLabels, energyLabels, stoolLabels, urineLabels, waterLabels } from "@/lib/labels";
 import type { PublicLog } from "@/lib/serialize";
@@ -56,6 +57,7 @@ export function DailyLog({
           className="field mt-3 min-h-20"
           onBlur={(event) => save({ foodNote: event.target.value || null })}
         />
+        {log?.appetite || log?.foodNote ? <RelatedResources context="food" /> : null}
       </section>
 
       <section className="card p-4">
@@ -133,6 +135,7 @@ export function DailyLog({
               initialUrl={log.vomitPhotoUrl}
               label="구토 사진 (선택)"
             />
+            <RelatedResources context="vomit" />
           </>
         ) : null}
       </section>

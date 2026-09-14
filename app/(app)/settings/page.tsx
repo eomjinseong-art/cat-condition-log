@@ -2,6 +2,7 @@ import Link from "next/link";
 import { logoutAction } from "@/app/actions/auth";
 import { deleteAccountAction } from "@/app/actions/account";
 import { ConfirmSubmit } from "@/components/confirm-submit";
+import { PartnerLinks } from "@/components/partner-links";
 import { Notice, PageHeader } from "@/components/ui";
 import { DISCLAIMER } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
@@ -32,6 +33,9 @@ export default async function SettingsPage() {
         <div className="card px-4 py-4">
           <p className="font-bold">가족 공유</p>
           <p className="mt-1 text-sm text-ink-soft">준비 중이에요. 지금은 계정 하나만 동기화돼요.</p>
+        </div>
+        <div className="card px-4 py-4">
+          <PartnerLinks variant="settings" />
         </div>
       </nav>
 

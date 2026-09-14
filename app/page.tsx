@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth } from "@/auth";
+import { PartnerLinks } from "@/components/partner-links";
 import { DISCLAIMER } from "@/lib/constants";
 import { redirect } from "next/navigation";
 
@@ -42,6 +43,9 @@ export default async function LandingPage() {
         </Link>
       </div>
       <p className="mt-8 text-xs leading-6 text-ink-soft">{DISCLAIMER}</p>
+      <footer className="mt-10 border-t border-line/80 pt-5">
+        <PartnerLinks variant="footer" />
+      </footer>
     </main>
   );
 }

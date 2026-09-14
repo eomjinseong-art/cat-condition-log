@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DailyLog } from "@/components/daily-log";
+import { RelatedResources } from "@/components/partner-links";
 import { EmptyState, Notice, PageHeader } from "@/components/ui";
 import { displayDate, todayKey } from "@/lib/dates";
 import {
@@ -43,6 +44,7 @@ export default async function HomePage({
           href="/cats/new"
           actionLabel="고양이 등록하기"
         />
+        <RelatedResources context="empty" />
       </>
     );
   }
