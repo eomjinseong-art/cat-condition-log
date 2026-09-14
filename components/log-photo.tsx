@@ -9,28 +9,16 @@ export function LogPhoto({
   field,
   initialUrl,
   label,
-  gated = false,
-  onGate,
 }: {
   catId: string;
   loggedOn: string;
   field: "photoUrl" | "vomitPhotoUrl";
   initialUrl?: string | null;
   label: string;
-  gated?: boolean;
-  onGate?: () => void;
 }) {
   const [url, setUrl] = useState(initialUrl ?? "");
   const [message, setMessage] = useState("");
   const [pending, startTransition] = useTransition();
-
-  if (gated) {
-    return (
-      <button type="button" className="btn-ghost mt-3 w-full text-sm" onClick={onGate}>
-        사진은 계정이 있으면 올릴 수 있어요
-      </button>
-    );
-  }
 
   async function upload(file: File | undefined) {
     if (!file) return;

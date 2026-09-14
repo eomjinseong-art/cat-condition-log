@@ -111,7 +111,7 @@ export function GuestHome({ date }: { date?: string }) {
         loggedOn={loggedOn}
         initial={currentLog}
         saveLog={async (payload) => saveLog(payload)}
-        photoGated
+        hidePhotos
       />
 
       {currentLog?.stoolQuality ? (

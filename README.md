@@ -73,10 +73,9 @@ docker run --name cat-pg -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=catlog -p 
 - 병원 리포트 인쇄/PDF
 - CSV 내보내기
 - 돌봄 일정(약·백신·구충·모래 전체갈이)
-- 사진 업로드
 - **세 번째** 고양이
 
-가입 또는 로그인 직후 `/api/guest/import`가 localStorage 스냅샷을 계정 Postgres로 옮기고, 성공하면 이 기기 게스트 데이터를 지웁니다. 사진 URL은 게스트에서 받지 않습니다.
+가입 또는 로그인 직후 `/api/guest/import`가 localStorage 스냅샷을 계정 Postgres로 옮기고, 성공하면 이 기기 게스트 데이터를 지웁니다. 게스트 경로에는 사진 업로드를 넣지 않습니다.
 
 ## 데이터
 

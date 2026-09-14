@@ -25,7 +25,7 @@ export default async function LandingPage() {
         {[
           "계정 없이 고양이 두 마리까지 바로 기록",
           "달력 · 7일/30일 그래프",
-          "가입하면 병원 리포트, CSV, 돌봄 일정, 사진, 클라우드 동기화",
+          "가입하면 병원 리포트, CSV, 돌봄 일정, 클라우드 동기화",
         ].map((item) => (
           <li key={item} className="card px-4 py-3">
             {item}

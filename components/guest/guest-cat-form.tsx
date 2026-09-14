@@ -5,7 +5,7 @@ import { useState } from "react";
 import { GuestLoading } from "@/components/guest/guest-shell";
 import { GuestFeatureGate } from "@/components/guest/signup-prompt";
 import { PageHeader } from "@/components/ui";
-import { useGuestActions, useGuestGate, useGuestHydrated } from "@/components/guest/guest-runtime";
+import { useGuestActions, useGuestHydrated } from "@/components/guest/guest-runtime";
 import { canAddGuestCat } from "@/lib/guest-store";
 
 function parseWeight(value: string) {
@@ -32,7 +32,7 @@ export function GuestNewCatForm() {
 
   return (
     <>
-      <PageHeader title="고양이 등록" subtitle="이름만 필수예요. 사진은 계정이 있으면 올릴 수 있어요." />
+      <PageHeader title="고양이 등록" subtitle="이름만 필수예요. 나머지는 나중에 채워도 돼요." />
       <GuestCatFields
         submitLabel="저장하고 기록하기"
         onSubmit={(input) => {
@@ -47,7 +47,6 @@ export function GuestNewCatForm() {
 export function GuestEditCatForm({ catId }: { catId: string }) {
   const hydrated = useGuestHydrated();
   const { snapshot, updateCat, deleteCat } = useGuestActions();
-  const { openGate } = useGuestGate();
   const router = useRouter();
 
   if (!hydrated) return <GuestLoading />;
@@ -72,13 +71,6 @@ export function GuestEditCatForm({ catId }: { catId: string }) {
           router.push("/cats");
         }}
       />
-      <p className="mt-4 text-xs leading-6 text-ink-soft">
-        프로필 사진은{" "}
-        <button type="button" className="font-bold text-accent" onClick={() => openGate("photos")}>
-          계정이 있으면
-        </button>{" "}
-        올릴 수 있어요.
-      </p>
       <button
         type="button"
         className="mt-6 w-full text-sm font-bold text-rose"
