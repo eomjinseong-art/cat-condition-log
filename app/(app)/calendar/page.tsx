@@ -5,8 +5,9 @@ import { EmptyState, PageHeader } from "@/components/ui";
 import { catColor, catIdsByDay } from "@/lib/cat-colors";
 import { addDays, displayDate, monthGrid, parseYearMonth, todayKey } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
+import { GuestCalendar } from "@/components/guest/guest-calendar";
 import { serializeCat, serializeLog } from "@/lib/serialize";
-import { readSelectedCatId, requireUserId } from "@/lib/session";
+import { getSessionUser, readSelectedCatId } from "@/lib/session";
 
 const weekdays = ["월", "화", "수", "목", "금", "토", "일"];
 
@@ -15,8 +16,12 @@ export default async function CalendarPage({
 }: {
   searchParams: Promise<{ month?: string; date?: string }>;
 }) {
-  const userId = await requireUserId();
+  const user = await getSessionUser();
   const params = await searchParams;
+  if (!user?.id) {
+    return <GuestCalendar month={params.month} date={params.date} />;
+  }
+  const userId = user.id;
   const { year, monthIndex } = parseYearMonth(params.month);
   const monthValue = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
   const selectedDate = params.date && /^\d{4}-\d{2}-\d{2}$/.test(params.date) ? params.date : todayKey();

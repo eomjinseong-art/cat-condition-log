@@ -1,21 +1,27 @@
 import Link from "next/link";
+import { selectCatAction } from "@/app/actions/cats";
 import { DailyLog } from "@/components/daily-log";
 import { CatPicker, StickyCatBar } from "@/components/cat-picker";
+import { GuestHome } from "@/components/guest/guest-home";
 import { RelatedResources } from "@/components/partner-links";
 import { EmptyState, Notice, PageHeader } from "@/components/ui";
 import { displayDate, todayKey } from "@/lib/dates";
 import { labelOrDash, reminderLabels, stoolLabels } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
 import { serializeCat, serializeLog, serializeReminder } from "@/lib/serialize";
-import { readSelectedCatId, requireUserId } from "@/lib/session";
+import { getSessionUser, readSelectedCatId } from "@/lib/session";
 
 export default async function HomePage({
   searchParams,
 }: {
   searchParams: Promise<{ date?: string }>;
 }) {
-  const userId = await requireUserId();
+  const user = await getSessionUser();
   const { date } = await searchParams;
+  if (!user?.id) {
+    return <GuestHome date={date} />;
+  }
+  const userId = user.id;
   const loggedOn = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : todayKey();
   const [catsRaw, remindersRaw] = await Promise.all([
     prisma.cat.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),

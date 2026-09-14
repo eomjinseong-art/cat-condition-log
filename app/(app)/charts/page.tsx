@@ -3,16 +3,19 @@ import { ChartsView } from "@/components/charts-view";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { rangeKeys, todayKey } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
+import { GuestCharts } from "@/components/guest/guest-charts";
 import { serializeCat, serializeLog } from "@/lib/serialize";
-import { readSelectedCatId, requireUserId } from "@/lib/session";
+import { getSessionUser, readSelectedCatId } from "@/lib/session";
 
 export default async function ChartsPage({
   searchParams,
 }: {
   searchParams: Promise<{ range?: string }>;
 }) {
-  const userId = await requireUserId();
+  const user = await getSessionUser();
   const { range } = await searchParams;
+  if (!user?.id) return <GuestCharts range={range} />;
+  const userId = user.id;
   const days = range === "7" ? 7 : 30;
   const keys = rangeKeys(days);
   const from = keys[0];

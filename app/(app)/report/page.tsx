@@ -7,16 +7,19 @@ import { DISCLAIMER } from "@/lib/constants";
 import { addDays, todayKey } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
 import { buildReport } from "@/lib/report";
+import { GuestReportPage } from "@/components/guest/guest-settings";
 import { serializeCat, serializeLog, serializeReminder } from "@/lib/serialize";
-import { readSelectedCatId, requireUserId } from "@/lib/session";
+import { getSessionUser, readSelectedCatId } from "@/lib/session";
 
 export default async function ReportPage({
   searchParams,
 }: {
   searchParams: Promise<{ from?: string; to?: string; catId?: string }>;
 }) {
-  const userId = await requireUserId();
+  const user = await getSessionUser();
   const params = await searchParams;
+  if (!user?.id) return <GuestReportPage />;
+  const userId = user.id;
   const to = params.to && /^\d{4}-\d{2}-\d{2}$/.test(params.to) ? params.to : todayKey();
   const from =
     params.from && /^\d{4}-\d{2}-\d{2}$/.test(params.from) ? params.from : addDays(to, -29);

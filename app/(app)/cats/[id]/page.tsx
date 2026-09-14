@@ -2,13 +2,16 @@ import { notFound } from "next/navigation";
 import { deleteCatAction, updateCatAction } from "@/app/actions/cats";
 import { ConfirmSubmit } from "@/components/confirm-submit";
 import { PageHeader } from "@/components/ui";
+import { GuestEditCatForm } from "@/components/guest/guest-cat-form";
 import { serializeCat } from "@/lib/serialize";
-import { requireUserId } from "@/lib/session";
+import { getSessionUser } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 
 export default async function EditCatPage({ params }: { params: Promise<{ id: string }> }) {
-  const userId = await requireUserId();
+  const user = await getSessionUser();
   const { id } = await params;
+  if (!user?.id) return <GuestEditCatForm catId={id} />;
+  const userId = user.id;
   const raw = await prisma.cat.findFirst({ where: { id, userId } });
   if (!raw) notFound();
   const cat = serializeCat(raw);

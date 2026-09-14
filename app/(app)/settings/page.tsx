@@ -4,20 +4,23 @@ import { deleteAccountAction } from "@/app/actions/account";
 import { ConfirmSubmit } from "@/components/confirm-submit";
 import { PartnerLinks } from "@/components/partner-links";
 import { Notice, PageHeader } from "@/components/ui";
+import { GuestSettings } from "@/components/guest/guest-settings";
 import { DISCLAIMER } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
-import { requireUserId } from "@/lib/session";
+import { getSessionUser } from "@/lib/session";
 
 export default async function SettingsPage() {
-  const userId = await requireUserId();
-  const user = await prisma.user.findUnique({
+  const user = await getSessionUser();
+  if (!user?.id) return <GuestSettings />;
+  const userId = user.id;
+  const account = await prisma.user.findUnique({
     where: { id: userId },
     select: { email: true, name: true },
   });
 
   return (
     <>
-      <PageHeader title="더보기" subtitle={user?.email ?? ""} />
+      <PageHeader title="더보기" subtitle={account?.email ?? ""} />
       <Notice>{DISCLAIMER}</Notice>
 
       <nav className="mt-5 space-y-2">

@@ -1,14 +1,17 @@
 import Link from "next/link";
 import { CatAvatar } from "@/components/cat-picker";
+import { GuestCats } from "@/components/guest/guest-cats";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { catColor } from "@/lib/cat-colors";
 import { ageLabel } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
 import { serializeCat } from "@/lib/serialize";
-import { requireUserId } from "@/lib/session";
+import { getSessionUser } from "@/lib/session";
 
 export default async function CatsPage() {
-  const userId = await requireUserId();
+  const user = await getSessionUser();
+  if (!user?.id) return <GuestCats />;
+  const userId = user.id;
   const cats = (await prisma.cat.findMany({ where: { userId }, orderBy: { createdAt: "asc" } })).map(
     serializeCat,
   );

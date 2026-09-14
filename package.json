@@ -10,7 +10,7 @@
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:push": "prisma db push",
-    "test": "tsx --test lib/report.test.ts lib/dates.test.ts lib/csv.test.ts lib/cat-colors.test.ts lib/chart-series.test.ts"
+    "test": "tsx --test lib/report.test.ts lib/dates.test.ts lib/csv.test.ts lib/cat-colors.test.ts lib/chart-series.test.ts lib/guest-store.test.ts lib/guest-import.test.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.16.2",
