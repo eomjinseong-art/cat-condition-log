@@ -1,19 +1,13 @@
 import Link from "next/link";
 import { DailyLog } from "@/components/daily-log";
+import { CatPicker, StickyCatBar } from "@/components/cat-picker";
 import { RelatedResources } from "@/components/partner-links";
 import { EmptyState, Notice, PageHeader } from "@/components/ui";
 import { displayDate, todayKey } from "@/lib/dates";
-import {
-  appetiteLabels,
-  energyLabels,
-  labelOrDash,
-  reminderLabels,
-  stoolLabels,
-} from "@/lib/labels";
+import { labelOrDash, reminderLabels, stoolLabels } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
 import { serializeCat, serializeLog, serializeReminder } from "@/lib/serialize";
 import { readSelectedCatId, requireUserId } from "@/lib/session";
-import { selectCatAction } from "@/app/actions/cats";
 
 export default async function HomePage({
   searchParams,
@@ -69,44 +63,17 @@ export default async function HomePage({
         }
       />
 
-      {cats.length > 1 ? (
-        <section className="mb-5">
-          <h2 className="mb-2 text-sm font-bold text-ink-soft">오늘 우리 집</h2>
-          <div className="grid gap-2">
-            {cats.map((cat) => {
-              const log = logs.find((item) => item.catId === cat.id);
-              return (
-                <form key={cat.id} action={selectCatAction.bind(null, cat.id)}>
-                  <button type="submit" className="card flex w-full items-center justify-between px-4 py-3 text-left">
-                    <span className="font-bold">{cat.name}</span>
-                    <span className="text-xs text-ink-soft">
-                      {log
-                        ? `식욕 ${labelOrDash(log.appetite, appetiteLabels)} · 컨디션 ${labelOrDash(log.energy, energyLabels)}`
-                        : "아직 미기록"}
-                    </span>
-                  </button>
-                </form>
-              );
-            })}
-          </div>
-        </section>
-      ) : (
-        <div className="mb-4 flex items-center justify-between">
-          <p className="text-lg font-extrabold">{current.name}</p>
-          <Link href={`/cats/${current.id}`} className="text-sm font-bold text-accent">
-            프로필
-          </Link>
-        </div>
-      )}
-
-      {cats.length > 1 ? (
-        <p className="mb-3 text-sm font-bold">
-          지금 기록 중: {current.name}{" "}
-          <Link href={`/cats/${current.id}`} className="text-accent">
+      <StickyCatBar>
+        <CatPicker cats={cats} selectedId={current.id} loggedCatIds={logs.map((log) => log.catId)} />
+        <p className="mt-2 flex items-center justify-between text-xs text-ink-soft">
+          <span>
+            지금 기록 중 <span className="font-bold text-ink">{current.name}</span>
+          </span>
+          <Link href={`/cats/${current.id}`} className="font-bold text-accent">
             프로필
           </Link>
         </p>
-      ) : null}
+      </StickyCatBar>
 
       {reminders.length > 0 ? (
         <Link href="/reminders" className="mb-4 block">
@@ -116,7 +83,12 @@ export default async function HomePage({
         </Link>
       ) : null}
 
-      <DailyLog catId={current.id} loggedOn={loggedOn} initial={currentLog} />
+      <DailyLog
+        key={`${current.id}-${loggedOn}`}
+        catId={current.id}
+        loggedOn={loggedOn}
+        initial={currentLog}
+      />
 
       {currentLog?.stoolQuality ? (
         <p className="mt-4 text-xs text-ink-soft">

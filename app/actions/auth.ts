@@ -2,12 +2,13 @@
 
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { clearDisclaimerAccepted, markDisclaimerAccepted, requireUserId } from "@/lib/session";
 import { loginSchema, registerSchema } from "@/lib/validations";
 
-export type FormState = { error?: string } | null;
+export type FormState = { error?: string; ok?: boolean } | null;
 
 export async function registerAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const parsed = registerSchema.safeParse({
@@ -37,7 +38,7 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
     await signIn("credentials", {
       email: parsed.data.email,
       password: parsed.data.password,
-      redirectTo: "/home",
+      redirectTo: "/disclaimer",
     });
   } catch (error) {
     if (error instanceof AuthError) {
@@ -73,15 +74,27 @@ export async function loginAction(_prev: FormState, formData: FormData): Promise
 }
 
 export async function logoutAction() {
+  await clearDisclaimerAccepted();
   await signOut({ redirectTo: "/" });
 }
 
-export async function acceptDisclaimerAction() {
-  const { requireUserId } = await import("@/lib/session");
+export async function acceptDisclaimerAction(
+  _prev: FormState,
+  _formData?: FormData,
+): Promise<FormState> {
   const userId = await requireUserId();
-  await prisma.user.update({
-    where: { id: userId },
-    data: { disclaimerAcceptedAt: new Date() },
-  });
-  redirect("/home");
+  try {
+    await prisma.user.update({
+      where: { id: userId },
+      data: { disclaimerAcceptedAt: new Date() },
+    });
+  } catch {
+    return { error: "안내 확인을 저장하지 못했어요. 잠시 후 다시 눌러 주세요." };
+  }
+
+  await markDisclaimerAccepted();
+  revalidatePath("/", "layout");
+  revalidatePath("/disclaimer");
+  revalidatePath("/home");
+  return { ok: true };
 }

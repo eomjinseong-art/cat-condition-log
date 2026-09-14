@@ -1,3 +1,5 @@
+import { CatPicker } from "@/components/cat-picker";
+import { DateSelectField } from "@/components/date-fields";
 import { PrintButton } from "@/components/print-button";
 import { ReportDocument } from "@/components/report-document";
 import { EmptyState, Notice, PageHeader } from "@/components/ui";
@@ -62,27 +64,23 @@ export default async function ReportPage({
       <div className="no-print">
         <PageHeader title="병원 리포트" subtitle="입력한 숫자만 모아요. 진단 문장은 넣지 않아요." />
         <Notice>{DISCLAIMER}</Notice>
-        <form className="card mt-4 grid gap-3 p-4">
-          <label className="text-sm font-bold">
-            고양이
-            <select name="catId" defaultValue={cat.id} className="field mt-1">
-              {cats.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            <label className="text-sm font-bold">
-              시작
-              <input name="from" type="date" defaultValue={from} className="field mt-1" />
-            </label>
-            <label className="text-sm font-bold">
-              끝
-              <input name="to" type="date" defaultValue={to} className="field mt-1" />
-            </label>
+        <form method="get" action="/report" className="card mt-4 grid gap-4 p-4">
+          <div>
+            <p className="mb-2 text-sm font-bold">고양이</p>
+            <CatPicker
+              cats={cats}
+              selectedId={cat.id}
+              hrefFor={(id) => `/report?catId=${id}&from=${from}&to=${to}`}
+            />
+            <input type="hidden" name="catId" value={cat.id} />
           </div>
+          <div className="grid gap-3">
+            <DateSelectField name="from" label="시작" defaultValue={from} />
+            <DateSelectField name="to" label="끝" defaultValue={to} />
+          </div>
+          <p className="text-xs leading-5 text-ink-soft">
+            날짜는 연·월·일 목록으로 골라 주세요. 키보드가 화면을 가리지 않아요.
+          </p>
           <button className="btn-ghost w-full" type="submit">
             기간 적용
           </button>

@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { deleteCatAction, updateCatAction } from "@/app/actions/cats";
 import { ConfirmSubmit } from "@/components/confirm-submit";
-import { PhotoField } from "@/components/photo-field";
 import { PageHeader } from "@/components/ui";
 import { serializeCat } from "@/lib/serialize";
 import { requireUserId } from "@/lib/session";
@@ -37,7 +36,6 @@ export default async function EditCatPage({ params }: { params: Promise<{ id: st
             className="field mt-1"
           />
         </label>
-        <PhotoField name="photoUrl" label="사진" catId={cat.id} initialUrl={cat.photoUrl} />
         <label className="block text-sm font-bold">
           메모
           <textarea name="notes" defaultValue={cat.notes ?? ""} className="field mt-1 min-h-24" />
@@ -48,7 +46,7 @@ export default async function EditCatPage({ params }: { params: Promise<{ id: st
       </form>
       <form action={deleteCatAction.bind(null, cat.id)} className="mt-6">
         <ConfirmSubmit
-          message="이 고양이의 기록·일정·사진 정보가 함께 삭제돼요. 진행할까요?"
+          message="이 고양이의 기록·일정 정보가 함께 삭제돼요. 진행할까요?"
           className="w-full text-sm font-bold text-rose"
         >
           이 고양이와 관련 기록 삭제

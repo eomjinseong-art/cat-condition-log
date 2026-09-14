@@ -26,7 +26,12 @@ export function LogPhoto({
     body.set("file", file);
     body.set("catId", catId);
     const response = await fetch("/api/upload", { method: "POST", body });
-    const data = (await response.json()) as { url?: string; error?: string };
+    let data: { url?: string; error?: string } = {};
+    try {
+      data = (await response.json()) as { url?: string; error?: string };
+    } catch {
+      data = {};
+    }
     if (!response.ok || !data.url) {
       setMessage(data.error ?? "업로드에 실패했어요.");
       return;

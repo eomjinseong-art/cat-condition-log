@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { signOut } from "@/auth";
 import { deletePhoto } from "@/lib/blob";
 import { prisma } from "@/lib/prisma";
-import { requireUserId } from "@/lib/session";
+import { clearDisclaimerAccepted, requireUserId } from "@/lib/session";
 
 export async function deleteAccountAction() {
   const userId = await requireUserId();
@@ -24,6 +24,7 @@ export async function deleteAccountAction() {
 
   await Promise.all(urls.map((url) => deletePhoto(url)));
   await prisma.user.delete({ where: { id: userId } });
+  await clearDisclaimerAccepted();
   await signOut({ redirect: false });
   redirect("/");
 }

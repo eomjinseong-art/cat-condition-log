@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { SELECTED_CAT_COOKIE } from "@/lib/constants";
+import { DISCLAIMER_COOKIE, SELECTED_CAT_COOKIE } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
 
 export async function getSessionUser() {
@@ -42,4 +42,24 @@ export async function writeSelectedCatId(catId: string) {
     sameSite: "lax",
     maxAge: 60 * 60 * 24 * 365,
   });
+}
+
+export async function markDisclaimerAccepted() {
+  const jar = await cookies();
+  jar.set(DISCLAIMER_COOKIE, "1", {
+    path: "/",
+    sameSite: "lax",
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 365,
+  });
+}
+
+export async function clearDisclaimerAccepted() {
+  const jar = await cookies();
+  jar.delete(DISCLAIMER_COOKIE);
+}
+
+export async function hasDisclaimerCookie() {
+  const jar = await cookies();
+  return jar.get(DISCLAIMER_COOKIE)?.value === "1";
 }

@@ -1,17 +1,12 @@
-const CACHE = "cat-condition-log-v1";
+const CACHE = "cat-condition-log-v2";
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(["/", "/home", "/manifest.webmanifest"])),
-  );
+self.addEventListener("install", () => {
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))),
+    caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))),
   );
   self.clients.claim();
 });
@@ -19,13 +14,24 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
+
+  const url = new URL(request.url);
+  const isStatic = url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/icon-");
+  if (!isStatic) return;
+
   event.respondWith(
-    fetch(request)
-      .then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => undefined);
-        return response;
-      })
-      .catch(() => caches.match(request).then((cached) => cached || caches.match("/"))),
+    caches.open(CACHE).then((cache) =>
+      cache.match(request).then((cached) => {
+        const fetched = fetch(request)
+          .then((response) => {
+            if (response.ok) {
+              cache.put(request, response.clone()).catch(() => undefined);
+            }
+            return response;
+          })
+          .catch(() => cached);
+        return cached || fetched;
+      }),
+    ),
   );
 });

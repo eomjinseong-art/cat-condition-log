@@ -85,6 +85,7 @@ textarea {
   background: #fff;
   padding: 0.7rem 0.9rem;
   color: var(--ink);
+  font-size: 16px;
 }
 
 .field:focus {
@@ -144,4 +145,37 @@ textarea {
 
 .print-only {
   display: none;
+}
+
+.cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.6rem;
+  padding: 0.22rem 0.8rem 0.22rem 0.22rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.cat-chip[data-selected="true"] {
+  border-color: var(--chip-color, var(--accent));
+  background: color-mix(in srgb, var(--chip-color, var(--accent)) 14%, #fff);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--chip-color, var(--accent)) 22%, transparent);
+}
+
+.log-save-bar {
+  position: fixed;
+  left: 50%;
+  z-index: 25;
+  width: min(32rem, calc(100% - 1.5rem));
+  transform: translateX(-50%);
+  bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+}
+
+@media print {
+  .log-save-bar {
+    display: none !important;
+  }
 }

@@ -27,7 +27,12 @@ export function PhotoField({
     body.set("file", file);
     if (catId) body.set("catId", catId);
     const response = await fetch("/api/upload", { method: "POST", body });
-    const data = (await response.json()) as { url?: string; error?: string };
+    let data: { url?: string; error?: string } = {};
+    try {
+      data = (await response.json()) as { url?: string; error?: string };
+    } catch {
+      data = {};
+    }
     setBusy(false);
     if (!response.ok || !data.url) {
       setStatus(data.error ?? "업로드에 실패했어요. 아래에서 URL을 직접 넣을 수 있어요.");
