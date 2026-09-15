@@ -84,7 +84,10 @@ export async function recordSiteVisit(options?: {
 /** Dedupes React Strict Mode / remounts so a day is hit at most once per session. */
 export function loadSiteVisitCount(): Promise<number | null> {
   if (!visitRequest) {
-    visitRequest = recordSiteVisit();
+    visitRequest = recordSiteVisit().then((value) => {
+      if (value === null) visitRequest = null;
+      return value;
+    });
   }
   return visitRequest;
 }

@@ -22,8 +22,8 @@ export function VisitorCounter() {
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-20 no-print">
-      <div className="mx-auto flex max-w-lg justify-end px-4 pt-[max(0.4rem,env(safe-area-inset-top))]">
-        <p className="text-[11px] leading-none tabular-nums text-ink-soft/55">{`👁 ${count}`}</p>
+      <div className="mx-auto flex max-w-lg justify-end px-4 pt-[max(0.55rem,env(safe-area-inset-top))]">
+        <p className="text-xs font-medium tabular-nums tracking-tight text-ink-soft">{`👁 ${count}`}</p>
       </div>
     </header>
   );
