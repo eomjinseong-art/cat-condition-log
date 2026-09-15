@@ -11,7 +11,10 @@ export const partners = {
   shop: {
     href: SHOP_HREF,
     name: "숨숨마을 고양이 용품 큐레이션",
+    shortName: "숨숨마을",
     kind: "용품",
     blurb: "필요한 물건만 골라 둔 목록이에요.",
+    landingTitle: "기록에 도움이 되는 용품은 숨숨마을",
+    homeTitle: "오늘 챙길 용품 · 숨숨마을",
   },
 } as const;

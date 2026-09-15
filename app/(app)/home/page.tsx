@@ -5,6 +5,7 @@ import { NextVisitCard, TodayMedsCard } from "@/components/care-widgets";
 import { CatPicker, StickyCatBar } from "@/components/cat-picker";
 import { GuestHome } from "@/components/guest/guest-home";
 import { RelatedResources } from "@/components/partner-links";
+import { HomeShopPromo } from "@/components/shop-promo";
 import { EmptyState, Notice, PageHeader } from "@/components/ui";
 import { displayDate, isSeniorCat, todayKey } from "@/lib/dates";
 import { labelOrDash, reminderLabels, stoolLabels } from "@/lib/labels";
@@ -62,6 +63,7 @@ export default async function HomePage({
           actionLabel="고양이 등록하기"
         />
         <RelatedResources context="empty" />
+        <HomeShopPromo />
       </>
     );
   }
@@ -139,6 +141,8 @@ export default async function HomePage({
           오늘 대변 성상: {labelOrDash(currentLog.stoolQuality, stoolLabels)}
         </p>
       ) : null}
+
+      <HomeShopPromo />
     </>
   );
 }

@@ -73,9 +73,7 @@ export function RelatedResources({
     return (
       <p className="mt-3 text-[12px] leading-6 text-ink-soft">
         식사 기록을 남기셨어요. 사료 설명이 궁금하면{" "}
-        <ExternalLink href={partners.wiki.href}>{partners.wiki.name}</ExternalLink>
-        를, 물건 목록이 필요하면{" "}
-        <ExternalLink href={partners.shop.href}>{partners.shop.name}</ExternalLink>를 천천히 살펴봐도
+        <ExternalLink href={partners.wiki.href}>{partners.wiki.name}</ExternalLink>를 천천히 살펴봐도
         좋아요.
       </p>
     );

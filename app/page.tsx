@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import { PartnerLinks } from "@/components/partner-links";
+import { LandingShopPromo } from "@/components/shop-promo";
 import { APP_NAME, APP_NAME_EN, DISCLAIMER } from "@/lib/constants";
 import { redirect } from "next/navigation";
 
@@ -44,6 +45,7 @@ export default async function LandingPage() {
           이미 계정이 있어요
         </Link>
       </div>
+      <LandingShopPromo />
       <p className="mt-8 text-xs leading-6 text-ink-soft">{DISCLAIMER}</p>
       <footer className="mt-10 border-t border-line/80 pt-5">
         <PartnerLinks variant="footer" />
