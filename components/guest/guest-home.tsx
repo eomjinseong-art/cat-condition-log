@@ -6,6 +6,7 @@ import { CatAgeDisplay } from "@/components/cat-age-display";
 import { GuestDailyLog } from "@/components/guest/guest-daily-log";
 import { GuestLoading, GuestLocalBanner } from "@/components/guest/guest-shell";
 import { RelatedResources } from "@/components/partner-links";
+import { HomeShopPromo } from "@/components/shop-promo";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { useGuestActions, useGuestGate, useGuestHydrated } from "@/components/guest/guest-runtime";
 import { canAddGuestCat } from "@/lib/guest-store";
@@ -35,6 +36,7 @@ export function GuestHome({ date }: { date?: string }) {
           actionLabel="고양이 등록하기"
         />
         <RelatedResources context="empty" />
+        <HomeShopPromo />
       </>
     );
   }
@@ -143,6 +145,8 @@ export function GuestHome({ date }: { date?: string }) {
           오늘 대변 성상: {labelOrDash(currentLog.stoolQuality, stoolLabels)}
         </p>
       ) : null}
+
+      <HomeShopPromo />
     </>
   );
 }
