@@ -242,7 +242,8 @@ export function addGuestCat(snapshot: GuestSnapshot, input: GuestCatInput): Gues
     id: newGuestId("cat"),
     name: input.name,
     birthDate: input.birthDate && isDateKey(input.birthDate) ? input.birthDate : null,
-    estimatedAgeYears: asEstimatedAgeYears(input.estimatedAgeYears ?? null),
+    estimatedAgeYears:
+      input.birthDate && isDateKey(input.birthDate) ? null : asEstimatedAgeYears(input.estimatedAgeYears ?? null),
     weightKg: input.weightKg ?? null,
     photoUrl: null,
     notes: input.notes ?? null,
@@ -268,7 +269,8 @@ export function updateGuestCat(snapshot: GuestSnapshot, catId: string, input: Gu
             ...cat,
             name: input.name,
             birthDate: input.birthDate && isDateKey(input.birthDate) ? input.birthDate : null,
-            estimatedAgeYears: asEstimatedAgeYears(input.estimatedAgeYears ?? null),
+            estimatedAgeYears:
+              input.birthDate && isDateKey(input.birthDate) ? null : asEstimatedAgeYears(input.estimatedAgeYears ?? null),
             weightKg: input.weightKg ?? null,
             notes: input.notes ?? null,
             photoUrl: null,

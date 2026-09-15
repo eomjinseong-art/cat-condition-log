@@ -92,6 +92,12 @@ describe("guest-store", () => {
     assert.equal(parsed.cats[0]?.birthDate, null);
   });
 
+  it("drops estimated age when a birthday is saved", () => {
+    let snapshot = addGuestCat(emptyGuestSnapshot(), { name: "나비", estimatedAgeYears: 8, birthDate: "2014-09-14" });
+    assert.equal(snapshot.cats[0]?.birthDate, "2014-09-14");
+    assert.equal(snapshot.cats[0]?.estimatedAgeYears, null);
+  });
+
   it("caps guest cats at two", () => {
     let snapshot = emptyGuestSnapshot();
     snapshot = addGuestCat(snapshot, { name: "하나" });

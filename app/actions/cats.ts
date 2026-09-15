@@ -38,7 +38,7 @@ export async function createCatAction(formData: FormData) {
       userId,
       name: parsed.data.name,
       birthDate: parsed.data.birthDate ? dateFromKey(parsed.data.birthDate) : null,
-      estimatedAgeYears: parseEstimatedAgeYears(parsed.data.estimatedAgeYears),
+      estimatedAgeYears: parsed.data.birthDate ? null : parseEstimatedAgeYears(parsed.data.estimatedAgeYears),
       weightKg: parseWeight(parsed.data.weightKg),
       photoUrl: parsed.data.photoUrl || null,
       notes: parsed.data.notes || null,
@@ -74,7 +74,7 @@ export async function updateCatAction(catId: string, formData: FormData) {
     data: {
       name: parsed.data.name,
       birthDate: parsed.data.birthDate ? dateFromKey(parsed.data.birthDate) : null,
-      estimatedAgeYears: parseEstimatedAgeYears(parsed.data.estimatedAgeYears),
+      estimatedAgeYears: parsed.data.birthDate ? null : parseEstimatedAgeYears(parsed.data.estimatedAgeYears),
       weightKg: parseWeight(parsed.data.weightKg),
       photoUrl: parsed.data.photoUrl || null,
       notes: parsed.data.notes || null,

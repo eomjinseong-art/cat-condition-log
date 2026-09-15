@@ -54,7 +54,7 @@ export function CatAgeField({
           placeholder="예: 8"
         />
         <span className="mt-1 block text-xs font-normal leading-5 text-ink-soft">
-          생일을 모르면 대략 나이만 적어도 돼요.
+          생일을 모르면 대략 나이만 적어도 돼요. 생일이 있으면 생일을 기준으로 해요.
         </span>
       </label>
       {view ? (
