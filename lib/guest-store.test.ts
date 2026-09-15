@@ -46,6 +46,7 @@ describe("guest-store", () => {
     assert.equal(parsed.logs[0]?.appetite, "NORMAL");
     assert.equal(parsed.cats[0]?.seniorCare, false);
     assert.deepEqual(parsed.cats[0]?.conditions, []);
+    assert.equal(parsed.cats[0]?.estimatedAgeYears, null);
   });
 
   it("keeps senior care tags and optional senior log chips", () => {
@@ -77,6 +78,18 @@ describe("guest-store", () => {
     assert.deepEqual(parsed.cats[0]?.conditions, ["CKD"]);
     assert.equal(parsed.logs[0]?.waterChange, "MORE");
     assert.equal(parsed.logs[0]?.mobility, "STIFF");
+  });
+
+  it("keeps estimated cat age when birthday is missing", () => {
+    const parsed = parseGuestSnapshot(
+      JSON.stringify({
+        cats: [{ id: "cat_1", name: "나비", estimatedAgeYears: 8 }],
+        logs: [],
+      }),
+    );
+    assert.ok(parsed);
+    assert.equal(parsed.cats[0]?.estimatedAgeYears, 8);
+    assert.equal(parsed.cats[0]?.birthDate, null);
   });
 
   it("caps guest cats at two", () => {

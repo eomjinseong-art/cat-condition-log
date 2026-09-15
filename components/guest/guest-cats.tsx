@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { CatAgeDisplay, catAgeExtra } from "@/components/cat-age-display";
 import { GuestLoading, GuestLocalBanner } from "@/components/guest/guest-shell";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { useGuestActions, useGuestGate, useGuestHydrated } from "@/components/guest/guest-runtime";
 import { canAddGuestCat } from "@/lib/guest-store";
-import { ageLabel, isSeniorCat } from "@/lib/dates";
+import { isSeniorCat } from "@/lib/dates";
 
 export function GuestCats() {
   const router = useRouter();
@@ -51,14 +52,13 @@ export function GuestCats() {
             <li key={cat.id}>
               <Link href={`/cats/${cat.id}`} className="card flex items-center gap-3 p-4">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sage-soft text-xl">🐱</div>
-                <div>
-                  <p className="font-extrabold">{cat.name}</p>
-                  <p className="text-sm text-ink-soft">
-                    {ageLabel(cat.birthDate) ?? "나이 미입력"}
-                    {cat.weightKg !== null ? ` · ${cat.weightKg.toFixed(2)}kg` : ""}
-                    {isSeniorCat(cat) ? " · 노묘 케어" : ""}
-                  </p>
-                </div>
+                <CatAgeDisplay
+                  variant="list"
+                  name={cat.name}
+                  birthDate={cat.birthDate}
+                  estimatedYears={cat.estimatedAgeYears}
+                  extra={catAgeExtra(cat, isSeniorCat(cat))}
+                />
               </Link>
             </li>
           ))}

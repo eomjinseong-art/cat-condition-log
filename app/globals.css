@@ -174,8 +174,32 @@ textarea {
   bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
 }
 
-@media print {
-  .log-save-bar {
-    display: none !important;
-  }
+.life-stage-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.12rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.life-stage-chip[data-stage="kitten"] {
+  background: #f6ead6;
+  color: #7a6248;
+}
+
+.life-stage-chip[data-stage="young"] {
+  background: #f3d2a8;
+  color: #8a5520;
+}
+
+.life-stage-chip[data-stage="mature"] {
+  background: #e4c8a4;
+  color: #6a4e32;
+}
+
+.life-stage-chip[data-stage="senior"] {
+  background: #d4c0a4;
+  color: #5a4634;
 }

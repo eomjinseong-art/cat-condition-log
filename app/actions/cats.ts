@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { deletePhoto } from "@/lib/blob";
 import { dateFromKey } from "@/lib/dates";
+import { parseEstimatedAgeYears } from "@/lib/form-parse";
 import { prisma } from "@/lib/prisma";
 import { requireOwnedCat, requireUserId, writeSelectedCatId } from "@/lib/session";
 import { parseConditions } from "@/lib/conditions";
@@ -21,6 +22,7 @@ export async function createCatAction(formData: FormData) {
   const parsed = catSchema.safeParse({
     name: formData.get("name"),
     birthDate: formData.get("birthDate") || undefined,
+    estimatedAgeYears: formData.get("estimatedAgeYears") || undefined,
     weightKg: formData.get("weightKg") || undefined,
     photoUrl: formData.get("photoUrl") || undefined,
     notes: formData.get("notes") || undefined,
@@ -36,6 +38,7 @@ export async function createCatAction(formData: FormData) {
       userId,
       name: parsed.data.name,
       birthDate: parsed.data.birthDate ? dateFromKey(parsed.data.birthDate) : null,
+      estimatedAgeYears: parseEstimatedAgeYears(parsed.data.estimatedAgeYears),
       weightKg: parseWeight(parsed.data.weightKg),
       photoUrl: parsed.data.photoUrl || null,
       notes: parsed.data.notes || null,
@@ -55,6 +58,7 @@ export async function updateCatAction(catId: string, formData: FormData) {
   const parsed = catSchema.safeParse({
     name: formData.get("name"),
     birthDate: formData.get("birthDate") || undefined,
+    estimatedAgeYears: formData.get("estimatedAgeYears") || undefined,
     weightKg: formData.get("weightKg") || undefined,
     photoUrl: formData.get("photoUrl") || undefined,
     notes: formData.get("notes") || undefined,
@@ -70,6 +74,7 @@ export async function updateCatAction(catId: string, formData: FormData) {
     data: {
       name: parsed.data.name,
       birthDate: parsed.data.birthDate ? dateFromKey(parsed.data.birthDate) : null,
+      estimatedAgeYears: parseEstimatedAgeYears(parsed.data.estimatedAgeYears),
       weightKg: parseWeight(parsed.data.weightKg),
       photoUrl: parsed.data.photoUrl || null,
       notes: parsed.data.notes || null,

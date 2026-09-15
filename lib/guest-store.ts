@@ -36,6 +36,7 @@ export type GuestLogPatch = {
 export type GuestCatInput = {
   name: string;
   birthDate?: string | null;
+  estimatedAgeYears?: number | null;
   weightKg?: number | null;
   notes?: string | null;
   seniorCare?: boolean;
@@ -94,6 +95,11 @@ function asWeight(value: unknown): number | null {
   return Number(value.toFixed(2));
 }
 
+function asEstimatedAgeYears(value: unknown): number | null {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 40) return null;
+  return value;
+}
+
 function parseCat(value: unknown): PublicCat | null {
   if (!value || typeof value !== "object") return null;
   const row = value as Record<string, unknown>;
@@ -104,6 +110,7 @@ function parseCat(value: unknown): PublicCat | null {
     id,
     name,
     birthDate: isDateKey(row.birthDate) ? row.birthDate : null,
+    estimatedAgeYears: asEstimatedAgeYears(row.estimatedAgeYears),
     weightKg: asWeight(row.weightKg),
     photoUrl: null,
     notes: asString(row.notes, 500),
@@ -235,6 +242,7 @@ export function addGuestCat(snapshot: GuestSnapshot, input: GuestCatInput): Gues
     id: newGuestId("cat"),
     name: input.name,
     birthDate: input.birthDate && isDateKey(input.birthDate) ? input.birthDate : null,
+    estimatedAgeYears: asEstimatedAgeYears(input.estimatedAgeYears ?? null),
     weightKg: input.weightKg ?? null,
     photoUrl: null,
     notes: input.notes ?? null,
@@ -260,6 +268,7 @@ export function updateGuestCat(snapshot: GuestSnapshot, catId: string, input: Gu
             ...cat,
             name: input.name,
             birthDate: input.birthDate && isDateKey(input.birthDate) ? input.birthDate : null,
+            estimatedAgeYears: asEstimatedAgeYears(input.estimatedAgeYears ?? null),
             weightKg: input.weightKg ?? null,
             notes: input.notes ?? null,
             photoUrl: null,

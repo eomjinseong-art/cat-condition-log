@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DailyLog } from "@/components/daily-log";
+import { CatAgeDisplay } from "@/components/cat-age-display";
 import { NextVisitCard, TodayMedsCard } from "@/components/care-widgets";
 import { CatPicker, StickyCatBar } from "@/components/cat-picker";
 import { GuestHome } from "@/components/guest/guest-home";
@@ -95,6 +96,11 @@ export default async function HomePage({
             프로필
           </Link>
         </p>
+        <CatAgeDisplay
+          variant="home"
+          birthDate={current.birthDate}
+          estimatedYears={current.estimatedAgeYears}
+        />
       </StickyCatBar>
 
       {reminders.length > 0 ? (

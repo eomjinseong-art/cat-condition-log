@@ -32,13 +32,14 @@ model Cat {
   id              String            @id @default(cuid())
   userId          String
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name            String
-  birthDate       DateTime?         @db.Date
-  weightKg        Decimal?          @db.Decimal(6, 2)
-  photoUrl        String?
-  notes           String?
-  seniorCare      Boolean           @default(false)
-  conditions      String[]          @default([])
+  name              String
+  birthDate         DateTime?         @db.Date
+  estimatedAgeYears Int?
+  weightKg          Decimal?          @db.Decimal(6, 2)
+  photoUrl          String?
+  notes             String?
+  seniorCare        Boolean           @default(false)
+  conditions        String[]          @default([])
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
   logs            Log[]

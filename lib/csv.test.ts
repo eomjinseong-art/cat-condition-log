@@ -7,6 +7,7 @@ const cat: PublicCat = {
   id: "c1",
   name: "나비",
   birthDate: "2023-01-01",
+  estimatedAgeYears: null,
   weightKg: 4.2,
   photoUrl: null,
   notes: null,

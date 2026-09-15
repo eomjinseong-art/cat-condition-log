@@ -42,6 +42,7 @@ export async function POST(request: Request) {
             userId,
             name: cat.name,
             birthDate: birthDateForDb(cat.birthDate),
+            estimatedAgeYears: cat.estimatedAgeYears,
             weightKg: cat.weightKg,
             photoUrl: null,
             notes: cat.notes,
