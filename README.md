@@ -110,10 +110,12 @@ npx prisma migrate dev --name describe_the_change
 2. Marketplace에서 **Neon** 또는 Postgres를 연결하고 `DATABASE_URL` 을 넣습니다.
 3. `AUTH_SECRET` 을 생성해 넣고, `AUTH_URL` 은 `https://<프로젝트>.vercel.app` 으로 둡니다.
 4. 사진을 쓰려면 Storage에서 **Blob**을 만들고 `BLOB_READ_WRITE_TOKEN` 을 연결합니다.
-5. 빌드 명령은 `prisma generate && next build` (`npm run build`)입니다. 첫 배포 전에 한 번, 또는 빌드 커맨드를 아래처럼 바꿉니다.
+5. 빌드 명령은 `npm run build`입니다. `DATABASE_URL`이 있으면 그 안에서 `prisma migrate deploy`를 먼저 실행하고, 이어서 `prisma generate && next build`를 합니다. URL이 없으면 migrate는 건너뜁니다.
+
+이미 올라간 프로덕션 DB만 맞출 때 (이 기기 `.env`를 덮어씁니다):
 
 ```bash
-npx prisma migrate deploy && npm run build
+npx vercel env pull .env --environment production --yes && npx prisma migrate deploy
 ```
 
 6. Deploy 후 게스트로 기록 → 회원가입으로 이관·클라우드 동기화를 확인합니다.
