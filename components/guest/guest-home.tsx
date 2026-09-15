@@ -105,13 +105,13 @@ export function GuestHome({ date }: { date?: string }) {
       )}
 
       {cats.length > 1 ? (
-        <p className="mb-1 text-sm font-bold">
-          지금 기록 중: {current.name}{" "}
-          <Link href={`/cats/${current.id}`} className="text-accent">
-            프로필
-          </Link>
-        </p>
         <div className="mb-3">
+          <p className="mb-1 text-sm font-bold">
+            지금 기록 중: {current.name}{" "}
+            <Link href={`/cats/${current.id}`} className="text-accent">
+              프로필
+            </Link>
+          </p>
           <CatAgeDisplay
             variant="home"
             birthDate={current.birthDate}
