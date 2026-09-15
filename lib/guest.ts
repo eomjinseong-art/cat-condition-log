@@ -2,7 +2,7 @@ export const GUEST_STORAGE_KEY = "cat-condition-log:guest:v1";
 export const GUEST_MAX_CATS = 2;
 export const GUEST_SNAPSHOT_VERSION = 1 as const;
 
-export type GatedFeature = "cloud" | "report" | "export" | "reminders" | "thirdCat";
+export type GatedFeature = "cloud" | "report" | "export" | "reminders" | "thirdCat" | "care";
 
 export const gatedCopy: Record<GatedFeature, { title: string; body: string }> = {
   cloud: {
@@ -20,6 +20,10 @@ export const gatedCopy: Record<GatedFeature, { title: string; body: string }> = 
   reminders: {
     title: "돌봄 일정은 계정이 있으면 쓸 수 있어요",
     body: "약·백신·구충·모래 전체갈이 알림은 계정에 맞춰 두려고 해요. 가입해도 지금까지의 컨디션 기록은 그대로 옮겨 드려요.",
+  },
+  care: {
+    title: "약·재진·검사 기록은 계정이 있으면 쓸 수 있어요",
+    body: "노묘 약 스케줄, 병원 재진, 검사 숫자, 피하수액은 계정에 맞춰 두려고 해요. 가입해도 지금까지의 하루 기록은 그대로 옮겨 드려요.",
   },
   thirdCat: {
     title: "세 번째 고양이는 계정이 필요해요",

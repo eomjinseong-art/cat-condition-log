@@ -21,6 +21,7 @@ import {
   persistGuestSnapshot,
   selectGuestCat,
   updateGuestCat,
+  type GuestCatInput,
   type GuestLogPatch,
   type GuestSnapshot,
 } from "@/lib/guest-store";
@@ -128,13 +129,10 @@ export function useGuestActions() {
     selectCat(catId: string) {
       replaceSnapshot(selectGuestCat(getSnapshot(), catId));
     },
-    addCat(input: { name: string; birthDate?: string | null; weightKg?: number | null; notes?: string | null }) {
+    addCat(input: GuestCatInput) {
       replaceSnapshot(addGuestCat(getSnapshot(), input));
     },
-    updateCat(
-      catId: string,
-      input: { name: string; birthDate?: string | null; weightKg?: number | null; notes?: string | null },
-    ) {
+    updateCat(catId: string, input: GuestCatInput) {
       replaceSnapshot(updateGuestCat(getSnapshot(), catId, input));
     },
     deleteCat(catId: string) {

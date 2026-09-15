@@ -30,6 +30,9 @@ export default async function SettingsPage() {
         <Link href="/reminders" className="card block px-4 py-4 font-bold">
           돌봄 일정
         </Link>
+        <Link href="/care" className="card block px-4 py-4 font-bold">
+          노묘 돌봄 (약·재진·검사)
+        </Link>
         <a href="/api/export" className="card block px-4 py-4 font-bold">
           기록 CSV 내보내기
         </a>

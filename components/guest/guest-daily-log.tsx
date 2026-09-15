@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { RelatedResources } from "@/components/partner-links";
+import { SeniorCheckSection } from "@/components/senior-check";
 import { ChipButton, SectionTitle } from "@/components/ui";
 import type { GuestLogPatch } from "@/lib/guest-store";
 import { appetiteLabels, energyLabels, stoolLabels, urineLabels, waterLabels } from "@/lib/labels";
@@ -14,11 +15,13 @@ export function GuestDailyLog({
   loggedOn,
   initial,
   saveLog,
+  senior,
 }: {
   catId: string;
   loggedOn: string;
   initial: PublicLog | null;
   saveLog: (patch: GuestLogPatch) => Promise<PublicLog> | PublicLog;
+  senior?: boolean;
 }) {
   const [log, setLog] = useState(initial);
   const [pending, startTransition] = useTransition();
@@ -141,6 +144,17 @@ export function GuestDailyLog({
           ))}
         </div>
       </section>
+
+      <SeniorCheckSection
+        emphasized={Boolean(senior)}
+        values={{
+          waterChange: log?.waterChange ?? null,
+          urineChange: log?.urineChange ?? null,
+          mobility: log?.mobility ?? null,
+          nightVocal: log?.nightVocal ?? null,
+        }}
+        onSelect={(key, value) => save({ [key]: value })}
+      />
 
       <section className="card p-4">
         <SectionTitle>체중 (0.01kg)</SectionTitle>

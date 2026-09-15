@@ -8,7 +8,15 @@ import { addDays, todayKey } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
 import { buildReport } from "@/lib/report";
 import { GuestReportPage } from "@/components/guest/guest-settings";
-import { serializeCat, serializeLog, serializeReminder } from "@/lib/serialize";
+import {
+  serializeCat,
+  serializeLabEntry,
+  serializeLog,
+  serializeMedicationDose,
+  serializeMedicationPlan,
+  serializeReminder,
+  serializeVisit,
+} from "@/lib/serialize";
 import { getSessionUser, readSelectedCatId } from "@/lib/session";
 
 export default async function ReportPage({
@@ -37,7 +45,7 @@ export default async function ReportPage({
 
   const cookieId = await readSelectedCatId();
   const cat = cats.find((item) => item.id === (params.catId || cookieId)) ?? cats[0];
-  const [logs, reminders] = await Promise.all([
+  const [logs, reminders, medicationPlans, doses, visits, labs] = await Promise.all([
     prisma.log
       .findMany({
         where: {
@@ -58,9 +66,34 @@ export default async function ReportPage({
         orderBy: { dueOn: "asc" },
       })
       .then((rows) => rows.map(serializeReminder)),
+    prisma.medicationPlan
+      .findMany({ where: { userId, catId: cat.id } })
+      .then((rows) => rows.map(serializeMedicationPlan)),
+    prisma.medicationDose
+      .findMany({
+        where: {
+          userId,
+          catId: cat.id,
+          takenOn: { gte: new Date(`${from}T00:00:00.000Z`), lte: new Date(`${to}T00:00:00.000Z`) },
+        },
+      })
+      .then((rows) => rows.map(serializeMedicationDose)),
+    prisma.visit
+      .findMany({
+        where: { userId, catId: cat.id },
+        orderBy: { visitOn: "asc" },
+      })
+      .then((rows) => rows.map(serializeVisit)),
+    prisma.labEntry
+      .findMany({
+        where: { userId, catId: cat.id },
+        orderBy: { takenOn: "desc" },
+        take: 8,
+      })
+      .then((rows) => rows.map(serializeLabEntry)),
   ]);
 
-  const report = buildReport({ cat, from, to, logs, reminders });
+  const report = buildReport({ cat, from, to, logs, reminders, medicationPlans, doses, visits, labs });
 
   return (
     <>

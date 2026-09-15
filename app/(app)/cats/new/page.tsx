@@ -1,4 +1,5 @@
 import { createCatAction } from "@/app/actions/cats";
+import { CatCareFields } from "@/components/cat-care-fields";
 import { GuestNewCatForm } from "@/components/guest/guest-cat-form";
 import { PageHeader } from "@/components/ui";
 import { getSessionUser } from "@/lib/session";
@@ -27,6 +28,7 @@ export default async function NewCatPage() {
           메모
           <textarea name="notes" className="field mt-1 min-h-24" placeholder="중성화, 알러지 등" />
         </label>
+        <CatCareFields />
         <button className="btn-primary w-full" type="submit">
           저장하고 기록하기
         </button>

@@ -1,13 +1,22 @@
 import Link from "next/link";
 import { DailyLog } from "@/components/daily-log";
+import { NextVisitCard, TodayMedsCard } from "@/components/care-widgets";
 import { CatPicker, StickyCatBar } from "@/components/cat-picker";
 import { GuestHome } from "@/components/guest/guest-home";
 import { RelatedResources } from "@/components/partner-links";
 import { EmptyState, Notice, PageHeader } from "@/components/ui";
-import { displayDate, todayKey } from "@/lib/dates";
+import { displayDate, isSeniorCat, todayKey } from "@/lib/dates";
 import { labelOrDash, reminderLabels, stoolLabels } from "@/lib/labels";
+import { buildDayDoses, nextVisitOf } from "@/lib/meds";
 import { prisma } from "@/lib/prisma";
-import { serializeCat, serializeLog, serializeReminder } from "@/lib/serialize";
+import {
+  serializeCat,
+  serializeLog,
+  serializeMedicationDose,
+  serializeMedicationPlan,
+  serializeReminder,
+  serializeVisit,
+} from "@/lib/serialize";
 import { getSessionUser, readSelectedCatId } from "@/lib/session";
 
 export default async function HomePage({
@@ -22,16 +31,24 @@ export default async function HomePage({
   }
   const userId = user.id;
   const loggedOn = date && /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : todayKey();
-  const [catsRaw, remindersRaw] = await Promise.all([
+  const [catsRaw, remindersRaw, plansRaw, dosesRaw, visitsRaw] = await Promise.all([
     prisma.cat.findMany({ where: { userId }, orderBy: { createdAt: "asc" } }),
     prisma.reminder.findMany({
       where: { userId, completedAt: null, dueOn: { lte: new Date() } },
       orderBy: { dueOn: "asc" },
       take: 4,
     }),
+    prisma.medicationPlan.findMany({ where: { userId, active: true } }),
+    prisma.medicationDose.findMany({
+      where: { userId, takenOn: new Date(`${loggedOn}T00:00:00.000Z`) },
+    }),
+    prisma.visit.findMany({ where: { userId, completedAt: null }, orderBy: { visitOn: "asc" } }),
   ]);
   const cats = catsRaw.map(serializeCat);
   const reminders = remindersRaw.map(serializeReminder);
+  const plans = plansRaw.map(serializeMedicationPlan);
+  const doses = dosesRaw.map(serializeMedicationDose);
+  const visits = visitsRaw.map(serializeVisit);
 
   if (cats.length === 0) {
     return (
@@ -88,11 +105,27 @@ export default async function HomePage({
         </Link>
       ) : null}
 
+      <TodayMedsCard
+        doses={buildDayDoses(
+          plans.filter((plan) => plan.catId === current.id),
+          doses,
+          loggedOn,
+        )}
+        catName={current.name}
+        emptyHint={isSeniorCat(current)}
+      />
+      <NextVisitCard
+        visit={nextVisitOf(visits.filter((visit) => visit.catId === current.id))}
+        catName={current.name}
+        emptyHint={isSeniorCat(current)}
+      />
+
       <DailyLog
         key={`${current.id}-${loggedOn}`}
         catId={current.id}
         loggedOn={loggedOn}
         initial={currentLog}
+        senior={isSeniorCat(current)}
       />
 
       {currentLog?.stoolQuality ? (

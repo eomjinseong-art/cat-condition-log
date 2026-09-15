@@ -1,6 +1,16 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { addDays, ageLabel, composeDateKey, daysInMonth, eachDateKey, formatDateKey, monthGrid } from "./dates";
+import {
+  addDays,
+  ageLabel,
+  composeDateKey,
+  daysInMonth,
+  diffDays,
+  eachDateKey,
+  formatDateKey,
+  isSeniorCat,
+  monthGrid,
+} from "./dates";
 
 describe("dates", () => {
   it("adds days across month boundaries", () => {
@@ -31,6 +41,13 @@ describe("dates", () => {
     assert.equal(cells[0].key, "2026-08-31");
     assert.equal(cells.find((cell) => cell.key === "2026-09-01")?.inMonth, true);
     assert.equal(cells.length % 7, 0);
+  });
+
+  it("treats 10-year-old cats and the seniorCare toggle as senior", () => {
+    assert.equal(isSeniorCat({ birthDate: "2016-09-14", seniorCare: false }, "2026-09-14"), true);
+    assert.equal(isSeniorCat({ birthDate: "2020-09-14", seniorCare: false }, "2026-09-14"), false);
+    assert.equal(isSeniorCat({ birthDate: "2020-09-14", seniorCare: true }, "2026-09-14"), true);
+    assert.equal(diffDays("2026-09-01", "2026-09-03"), 2);
   });
 
   it("clamps calendar dates to a real day in the month", () => {

@@ -10,6 +10,8 @@ const cat: PublicCat = {
   weightKg: 4.2,
   photoUrl: null,
   notes: null,
+  seniorCare: false,
+  conditions: [],
 };
 
 const log: PublicLog = {
@@ -29,6 +31,10 @@ const log: PublicLog = {
   weightKg: 4.25,
   memo: "잘 놀았어요",
   photoUrl: null,
+  waterChange: "SAME",
+  urineChange: null,
+  mobility: null,
+  nightVocal: "NONE",
 };
 
 describe("csv", () => {

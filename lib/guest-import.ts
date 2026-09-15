@@ -1,3 +1,4 @@
+import { parseConditions, type CatCondition } from "@/lib/conditions";
 import { dateFromKey } from "@/lib/dates";
 import { GUEST_MAX_CATS } from "@/lib/guest";
 import type { PublicLog } from "@/lib/serialize";
@@ -13,6 +14,8 @@ const guestCatSchema = z.object({
     .optional(),
   weightKg: z.number().min(0.01).max(30).nullable().optional(),
   notes: z.string().max(500).nullable().optional(),
+  seniorCare: z.boolean().optional(),
+  conditions: z.array(z.string()).optional(),
 });
 
 const guestLogSchema = z.object({
@@ -30,6 +33,10 @@ const guestLogSchema = z.object({
   energy: z.enum(["LOW", "NORMAL", "HIGH"]).nullable().optional(),
   weightKg: z.number().min(0.01).max(30).nullable().optional(),
   memo: z.string().max(400).nullable().optional(),
+  waterChange: z.enum(["LESS", "SAME", "MORE"]).nullable().optional(),
+  urineChange: z.enum(["LESS", "SAME", "MORE"]).nullable().optional(),
+  mobility: z.enum(["GOOD", "STIFF", "PAIN", "HARD"]).nullable().optional(),
+  nightVocal: z.enum(["NONE", "SOME", "MUCH"]).nullable().optional(),
 });
 
 export const guestImportSchema = z.object({
@@ -48,6 +55,8 @@ export type PlannedGuestCat = {
   birthDate: string | null;
   weightKg: number | null;
   notes: string | null;
+  seniorCare: boolean;
+  conditions: CatCondition[];
 };
 
 export type PlannedGuestLog = Omit<PublicLog, "id" | "photoUrl" | "vomitPhotoUrl"> & {
@@ -66,6 +75,8 @@ export function planGuestImport(payload: GuestImportPayload): {
     birthDate: cat.birthDate ?? null,
     weightKg: cat.weightKg ?? null,
     notes: cat.notes ?? null,
+    seniorCare: Boolean(cat.seniorCare),
+    conditions: parseConditions(cat.conditions),
   }));
   const catIds = new Set(cats.map((cat) => cat.guestId));
   const logs: PlannedGuestLog[] = [];
@@ -110,10 +121,13 @@ function toPlannedLog(log: z.infer<typeof guestLogSchema>): PlannedGuestLog {
     energy: log.energy ?? null,
     weightKg: log.weightKg ?? null,
     memo: log.memo ?? null,
+    waterChange: log.waterChange ?? null,
+    urineChange: log.urineChange ?? null,
+    mobility: log.mobility ?? null,
+    nightVocal: log.nightVocal ?? null,
   };
 }
 
 export function birthDateForDb(value: string | null) {
   return value ? dateFromKey(value) : null;
 }
-

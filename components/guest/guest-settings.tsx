@@ -34,6 +34,7 @@ export function GuestSettings() {
           고양이 프로필
         </Link>
         <GateButton feature="reminders" label="돌봄 일정" onGate={openGate} />
+        <GateButton feature="care" label="노묘 돌봄 (약·재진·검사)" onGate={openGate} />
         <GateButton feature="export" label="기록 CSV 내보내기" onGate={openGate} />
         <GateButton feature="report" label="병원 리포트 · 인쇄/PDF" onGate={openGate} />
         <div className="card px-4 py-4">

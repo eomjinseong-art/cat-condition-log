@@ -6,6 +6,7 @@ import { deletePhoto } from "@/lib/blob";
 import { dateFromKey } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
 import { requireOwnedCat, requireUserId, writeSelectedCatId } from "@/lib/session";
+import { parseConditions } from "@/lib/conditions";
 import { catSchema } from "@/lib/validations";
 
 function parseWeight(value?: string) {
@@ -23,6 +24,8 @@ export async function createCatAction(formData: FormData) {
     weightKg: formData.get("weightKg") || undefined,
     photoUrl: formData.get("photoUrl") || undefined,
     notes: formData.get("notes") || undefined,
+    seniorCare: formData.get("seniorCare") === "on",
+    conditions: parseConditions(formData.getAll("conditions")),
   });
   if (!parsed.success) {
     throw new Error(parsed.error.issues[0]?.message ?? "입력값을 확인해 주세요.");
@@ -36,6 +39,8 @@ export async function createCatAction(formData: FormData) {
       weightKg: parseWeight(parsed.data.weightKg),
       photoUrl: parsed.data.photoUrl || null,
       notes: parsed.data.notes || null,
+      seniorCare: Boolean(parsed.data.seniorCare),
+      conditions: parsed.data.conditions ?? [],
     },
   });
 
@@ -53,6 +58,8 @@ export async function updateCatAction(catId: string, formData: FormData) {
     weightKg: formData.get("weightKg") || undefined,
     photoUrl: formData.get("photoUrl") || undefined,
     notes: formData.get("notes") || undefined,
+    seniorCare: formData.get("seniorCare") === "on",
+    conditions: parseConditions(formData.getAll("conditions")),
   });
   if (!parsed.success) {
     throw new Error(parsed.error.issues[0]?.message ?? "입력값을 확인해 주세요.");
@@ -66,6 +73,8 @@ export async function updateCatAction(catId: string, formData: FormData) {
       weightKg: parseWeight(parsed.data.weightKg),
       photoUrl: parsed.data.photoUrl || null,
       notes: parsed.data.notes || null,
+      seniorCare: Boolean(parsed.data.seniorCare),
+      conditions: parsed.data.conditions ?? [],
     },
   });
 

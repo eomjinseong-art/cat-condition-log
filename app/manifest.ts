@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: APP_NAME,
     short_name: APP_SHORT_NAME,
-    description: "10초 습관으로 남기는 고양이 컨디션 기록",
+    description: "일기쓰는 고양이(Diary Cat) — 10초 습관으로 남기는 하루 기록",
     start_url: "/home",
     display: "standalone",
     background_color: "#f7f1e8",

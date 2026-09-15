@@ -1,5 +1,6 @@
+import { parseConditions, type CatCondition } from "@/lib/conditions";
 import { GUEST_MAX_CATS, GUEST_SNAPSHOT_VERSION, GUEST_STORAGE_KEY } from "@/lib/guest";
-import type { PublicCat, PublicLog } from "@/lib/serialize";
+import { emptyPublicLog, type PublicCat, type PublicLog } from "@/lib/serialize";
 import { logPatchSchema } from "@/lib/validations";
 
 export type GuestSnapshot = {
@@ -26,6 +27,19 @@ export type GuestLogPatch = {
   weightKg?: number | null;
   memo?: string | null;
   photoUrl?: string | null;
+  waterChange?: PublicLog["waterChange"];
+  urineChange?: PublicLog["urineChange"];
+  mobility?: PublicLog["mobility"];
+  nightVocal?: PublicLog["nightVocal"];
+};
+
+export type GuestCatInput = {
+  name: string;
+  birthDate?: string | null;
+  weightKg?: number | null;
+  notes?: string | null;
+  seniorCare?: boolean;
+  conditions?: CatCondition[];
 };
 
 const APPETITES = new Set(["NONE", "LOW", "NORMAL", "HIGH"]);
@@ -33,6 +47,9 @@ const WATERS = new Set(["LITTLE", "NORMAL", "MUCH"]);
 const STOOLS = new Set(["NONE", "HARD", "NORMAL", "SOFT", "DIARRHEA"]);
 const URINES = new Set(["LITTLE", "NORMAL", "MUCH", "BLOOD"]);
 const ENERGIES = new Set(["LOW", "NORMAL", "HIGH"]);
+const CHANGES = new Set(["LESS", "SAME", "MORE"]);
+const MOBILITIES = new Set(["GOOD", "STIFF", "PAIN", "HARD"]);
+const NIGHT_VOCALS = new Set(["NONE", "SOME", "MUCH"]);
 
 export function emptyGuestSnapshot(): GuestSnapshot {
   return {
@@ -90,6 +107,8 @@ function parseCat(value: unknown): PublicCat | null {
     weightKg: asWeight(row.weightKg),
     photoUrl: null,
     notes: asString(row.notes, 500),
+    seniorCare: row.seniorCare === true,
+    conditions: parseConditions(row.conditions),
   };
 }
 
@@ -123,6 +142,20 @@ function parseLog(value: unknown): PublicLog | null {
     weightKg: asWeight(row.weightKg),
     memo: asString(row.memo, 400),
     photoUrl: null,
+    waterChange:
+      typeof row.waterChange === "string" && CHANGES.has(row.waterChange)
+        ? (row.waterChange as PublicLog["waterChange"])
+        : null,
+    urineChange:
+      typeof row.urineChange === "string" && CHANGES.has(row.urineChange)
+        ? (row.urineChange as PublicLog["urineChange"])
+        : null,
+    mobility:
+      typeof row.mobility === "string" && MOBILITIES.has(row.mobility) ? (row.mobility as PublicLog["mobility"]) : null,
+    nightVocal:
+      typeof row.nightVocal === "string" && NIGHT_VOCALS.has(row.nightVocal)
+        ? (row.nightVocal as PublicLog["nightVocal"])
+        : null,
   };
 }
 
@@ -157,27 +190,6 @@ export function parseGuestSnapshot(raw: string | null | undefined): GuestSnapsho
   }
 }
 
-export function emptyPublicLog(catId: string, loggedOn: string, id = newGuestId("log")): PublicLog {
-  return {
-    id,
-    catId,
-    loggedOn,
-    appetite: null,
-    foodNote: null,
-    water: null,
-    stoolCount: null,
-    stoolQuality: null,
-    urine: null,
-    vomit: null,
-    vomitNote: null,
-    vomitPhotoUrl: null,
-    energy: null,
-    weightKg: null,
-    memo: null,
-    photoUrl: null,
-  };
-}
-
 export function applyGuestLogPatch(snapshot: GuestSnapshot, raw: GuestLogPatch): { snapshot: GuestSnapshot; log: PublicLog } {
   const parsed = logPatchSchema.safeParse(raw);
   if (!parsed.success) {
@@ -190,7 +202,7 @@ export function applyGuestLogPatch(snapshot: GuestSnapshot, raw: GuestLogPatch):
   const { catId, loggedOn, ...patch } = parsed.data;
   const existing = snapshot.logs.find((log) => log.catId === catId && log.loggedOn === loggedOn);
   const log: PublicLog = {
-    ...(existing ?? emptyPublicLog(catId, loggedOn)),
+    ...(existing ?? emptyPublicLog(catId, loggedOn, newGuestId("log"))),
     catId,
     loggedOn,
   };
@@ -215,10 +227,7 @@ export function applyGuestLogPatch(snapshot: GuestSnapshot, raw: GuestLogPatch):
   return { snapshot: { ...snapshot, logs, cats }, log };
 }
 
-export function addGuestCat(
-  snapshot: GuestSnapshot,
-  input: { name: string; birthDate?: string | null; weightKg?: number | null; notes?: string | null },
-): GuestSnapshot {
+export function addGuestCat(snapshot: GuestSnapshot, input: GuestCatInput): GuestSnapshot {
   if (!canAddGuestCat(snapshot)) {
     throw new Error("GUEST_CAT_LIMIT");
   }
@@ -229,6 +238,8 @@ export function addGuestCat(
     weightKg: input.weightKg ?? null,
     photoUrl: null,
     notes: input.notes ?? null,
+    seniorCare: Boolean(input.seniorCare),
+    conditions: parseConditions(input.conditions),
   };
   return {
     ...snapshot,
@@ -237,11 +248,7 @@ export function addGuestCat(
   };
 }
 
-export function updateGuestCat(
-  snapshot: GuestSnapshot,
-  catId: string,
-  input: { name: string; birthDate?: string | null; weightKg?: number | null; notes?: string | null },
-): GuestSnapshot {
+export function updateGuestCat(snapshot: GuestSnapshot, catId: string, input: GuestCatInput): GuestSnapshot {
   if (!snapshot.cats.some((cat) => cat.id === catId)) {
     throw new Error("고양이를 찾을 수 없어요.");
   }
@@ -256,6 +263,8 @@ export function updateGuestCat(
             weightKg: input.weightKg ?? null,
             notes: input.notes ?? null,
             photoUrl: null,
+            seniorCare: Boolean(input.seniorCare),
+            conditions: parseConditions(input.conditions),
           }
         : cat,
     ),

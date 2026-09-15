@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import { PartnerLinks } from "@/components/partner-links";
-import { DISCLAIMER } from "@/lib/constants";
+import { APP_NAME, APP_NAME_EN, DISCLAIMER } from "@/lib/constants";
 import { redirect } from "next/navigation";
 
 export default async function LandingPage() {
@@ -10,11 +10,11 @@ export default async function LandingPage() {
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-lg flex-col px-5 py-10">
-      <p className="text-sm font-bold text-accent">Cat Condition Log</p>
+      <p className="text-sm font-bold text-accent">{APP_NAME_EN}</p>
       <h1 className="mt-2 text-4xl font-black leading-tight">
         10초면 끝나는
         <br />
-        고양이 컨디션 기록
+        {APP_NAME}
       </h1>
       <p className="mt-4 text-base leading-7 text-ink-soft">
         식욕·물·화장실·구토를 한 탭으로 남기고, 병원에는 숫자 그대로 정리된 한 장 요약을 가져가세요.
@@ -25,7 +25,7 @@ export default async function LandingPage() {
         {[
           "계정 없이 고양이 두 마리까지 바로 기록",
           "달력 · 7일/30일 그래프",
-          "가입하면 병원 리포트, CSV, 돌봄 일정, 클라우드 동기화",
+          "가입하면 병원 리포트, 약·재진·검사 기록, 클라우드 동기화",
         ].map((item) => (
           <li key={item} className="card px-4 py-3">
             {item}

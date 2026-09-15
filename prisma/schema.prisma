@@ -8,35 +8,47 @@ datasource db {
 }
 
 model User {
-  id                   String     @id @default(cuid())
-  email                String     @unique
+  id                   String            @id @default(cuid())
+  email                String            @unique
   name                 String?
   passwordHash         String?
   disclaimerAcceptedAt DateTime?
-  createdAt            DateTime   @default(now())
-  updatedAt            DateTime   @updatedAt
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
   cats                 Cat[]
   logs                 Log[]
   reminders            Reminder[]
   media                Media[]
+  medicationPlans      MedicationPlan[]
+  medicationDoses      MedicationDose[]
+  visits               Visit[]
+  labEntries           LabEntry[]
+  fluidLogs            FluidLog[]
 
   @@map("users")
 }
 
 model Cat {
-  id        String     @id @default(cuid())
-  userId    String
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name      String
-  birthDate DateTime?  @db.Date
-  weightKg  Decimal?   @db.Decimal(6, 2)
-  photoUrl  String?
-  notes     String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  logs      Log[]
-  reminders Reminder[]
-  media     Media[]
+  id              String            @id @default(cuid())
+  userId          String
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name            String
+  birthDate       DateTime?         @db.Date
+  weightKg        Decimal?          @db.Decimal(6, 2)
+  photoUrl        String?
+  notes           String?
+  seniorCare      Boolean           @default(false)
+  conditions      String[]          @default([])
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  logs            Log[]
+  reminders       Reminder[]
+  media           Media[]
+  medicationPlans MedicationPlan[]
+  medicationDoses MedicationDose[]
+  visits          Visit[]
+  labEntries      LabEntry[]
+  fluidLogs       FluidLog[]
 
   @@index([userId])
   @@map("cats")
@@ -62,6 +74,10 @@ model Log {
   weightKg      Decimal?      @db.Decimal(6, 2)
   memo          String?
   photoUrl      String?
+  waterChange   ChangeLevel?
+  urineChange   ChangeLevel?
+  mobility      Mobility?
+  nightVocal    NightVocal?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   media         Media[]
@@ -88,6 +104,103 @@ model Reminder {
 
   @@index([userId, dueOn])
   @@map("reminders")
+}
+
+model MedicationPlan {
+  id           String           @id @default(cuid())
+  userId       String
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catId        String
+  cat          Cat              @relation(fields: [catId], references: [id], onDelete: Cascade)
+  name         String
+  doseNotes    String?
+  frequency    MedFrequency
+  timesPerDay  Int?
+  weekdays     String?
+  intervalDays Int?
+  startOn      DateTime?        @db.Date
+  endOn        DateTime?        @db.Date
+  active       Boolean          @default(true)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  doses        MedicationDose[]
+
+  @@index([userId, catId])
+  @@map("medication_plans")
+}
+
+model MedicationDose {
+  id        String          @id @default(cuid())
+  userId    String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId    String
+  plan      MedicationPlan  @relation(fields: [planId], references: [id], onDelete: Cascade)
+  catId     String
+  cat       Cat             @relation(fields: [catId], references: [id], onDelete: Cascade)
+  takenOn   DateTime        @db.Date
+  slot      Int             @default(0)
+  givenAt   DateTime
+  createdAt DateTime        @default(now())
+
+  @@unique([planId, takenOn, slot])
+  @@index([userId, takenOn])
+  @@map("medication_doses")
+}
+
+model Visit {
+  id          String    @id @default(cuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catId       String
+  cat         Cat       @relation(fields: [catId], references: [id], onDelete: Cascade)
+  visitOn     DateTime  @db.Date
+  clinicName  String?
+  reason      String?
+  reminderOn  DateTime? @db.Date
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([userId, visitOn])
+  @@map("visits")
+}
+
+model LabEntry {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catId         String
+  cat           Cat      @relation(fields: [catId], references: [id], onDelete: Cascade)
+  takenOn       DateTime @db.Date
+  creatinine    Decimal? @db.Decimal(8, 3)
+  sdma          Decimal? @db.Decimal(8, 2)
+  bun           Decimal? @db.Decimal(8, 2)
+  phosphorus    Decimal? @db.Decimal(8, 2)
+  t4            Decimal? @db.Decimal(8, 2)
+  bloodPressure Int?
+  weightKg      Decimal? @db.Decimal(6, 2)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId, catId, takenOn])
+  @@map("lab_entries")
+}
+
+model FluidLog {
+  id        String     @id @default(cuid())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catId     String
+  cat       Cat        @relation(fields: [catId], references: [id], onDelete: Cascade)
+  givenOn   DateTime   @db.Date
+  volumeMl  Int
+  site      FluidSite?
+  notes     String?
+  createdAt DateTime   @default(now())
+
+  @@index([userId, catId, givenOn])
+  @@map("fluid_logs")
 }
 
 model Media {
@@ -146,4 +259,36 @@ enum ReminderType {
   VACCINE
   DEWORMING
   LITTER_CHANGE
+}
+
+enum ChangeLevel {
+  LESS
+  SAME
+  MORE
+}
+
+enum Mobility {
+  GOOD
+  STIFF
+  PAIN
+  HARD
+}
+
+enum NightVocal {
+  NONE
+  SOME
+  MUCH
+}
+
+enum MedFrequency {
+  DAILY
+  TIMES_PER_DAY
+  WEEKDAYS
+  EVERY_N_DAYS
+}
+
+enum FluidSite {
+  LEFT_SCRUFF
+  RIGHT_SCRUFF
+  OTHER
 }

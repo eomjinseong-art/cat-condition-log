@@ -8,7 +8,7 @@ import { RelatedResources } from "@/components/partner-links";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { useGuestActions, useGuestGate, useGuestHydrated } from "@/components/guest/guest-runtime";
 import { canAddGuestCat } from "@/lib/guest-store";
-import { displayDate, todayKey } from "@/lib/dates";
+import { displayDate, isSeniorCat, todayKey } from "@/lib/dates";
 import { appetiteLabels, energyLabels, labelOrDash, stoolLabels } from "@/lib/labels";
 
 export function GuestHome({ date }: { date?: string }) {
@@ -105,12 +105,22 @@ export function GuestHome({ date }: { date?: string }) {
         </p>
       ) : null}
 
+      {isSeniorCat(current) ? (
+        <button type="button" className="card mb-4 block w-full p-4 text-left" onClick={() => openGate("care")}>
+          <p className="text-xs font-bold text-accent">약 · 재진 · 검사</p>
+          <p className="mt-1 text-sm leading-6 text-ink-soft">
+            노묘 약 스케줄과 병원 일정은 계정이 있으면 홈에서 「줬어요」로 남길 수 있어요.
+          </p>
+        </button>
+      ) : null}
+
       <GuestDailyLog
         key={`${current.id}-${loggedOn}`}
         catId={current.id}
         loggedOn={loggedOn}
         initial={currentLog}
         saveLog={saveLog}
+        senior={isSeniorCat(current)}
       />
 
       {currentLog?.stoolQuality ? (

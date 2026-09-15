@@ -35,6 +35,10 @@ export async function upsertLogAction(raw: unknown) {
     weightKg: patch.weightKg ?? undefined,
     memo: patch.memo ?? undefined,
     photoUrl: patch.photoUrl ?? undefined,
+    waterChange: patch.waterChange ?? undefined,
+    urineChange: patch.urineChange ?? undefined,
+    mobility: patch.mobility ?? undefined,
+    nightVocal: patch.nightVocal ?? undefined,
   };
 
   const update: Prisma.LogUncheckedUpdateInput = {};
