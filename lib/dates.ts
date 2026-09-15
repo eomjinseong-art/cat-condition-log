@@ -87,10 +87,12 @@ export function isSeniorByAge(birthDate: Date | string | null | undefined, asOf 
 }
 
 export function isSeniorCat(
-  cat: { birthDate?: Date | string | null; seniorCare?: boolean },
+  cat: { birthDate?: Date | string | null; estimatedAgeYears?: number | null; seniorCare?: boolean },
   asOf = todayKey(),
 ): boolean {
-  return Boolean(cat.seniorCare) || isSeniorByAge(cat.birthDate, asOf);
+  if (cat.seniorCare) return true;
+  if (cat.birthDate) return isSeniorByAge(cat.birthDate, asOf);
+  return cat.estimatedAgeYears != null && cat.estimatedAgeYears >= SENIOR_AGE_YEARS;
 }
 
 export function diffDays(fromKey: string, toKey: string): number {

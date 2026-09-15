@@ -5,6 +5,7 @@ export type PublicCat = {
   id: string;
   name: string;
   birthDate: string | null;
+  estimatedAgeYears: number | null;
   weightKg: number | null;
   photoUrl: string | null;
   notes: string | null;
@@ -155,6 +156,7 @@ export function serializeCat(cat: Cat): PublicCat {
     id: cat.id,
     name: cat.name,
     birthDate: dateOnly(cat.birthDate),
+    estimatedAgeYears: cat.estimatedAgeYears ?? null,
     weightKg: decimalToNumber(cat.weightKg),
     photoUrl: cat.photoUrl,
     notes: cat.notes,

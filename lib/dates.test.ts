@@ -47,6 +47,12 @@ describe("dates", () => {
     assert.equal(isSeniorCat({ birthDate: "2016-09-14", seniorCare: false }, "2026-09-14"), true);
     assert.equal(isSeniorCat({ birthDate: "2020-09-14", seniorCare: false }, "2026-09-14"), false);
     assert.equal(isSeniorCat({ birthDate: "2020-09-14", seniorCare: true }, "2026-09-14"), true);
+    assert.equal(isSeniorCat({ estimatedAgeYears: 10, seniorCare: false }, "2026-09-14"), true);
+    assert.equal(isSeniorCat({ estimatedAgeYears: 8, seniorCare: false }, "2026-09-14"), false);
+    assert.equal(
+      isSeniorCat({ birthDate: "2023-09-14", estimatedAgeYears: 12, seniorCare: false }, "2026-09-14"),
+      false,
+    );
     assert.equal(diffDays("2026-09-01", "2026-09-03"), 2);
   });
 

@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { CatAgeDisplay, catAgeExtra } from "@/components/cat-age-display";
 import { CatAvatar } from "@/components/cat-picker";
 import { GuestCats } from "@/components/guest/guest-cats";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { catColor } from "@/lib/cat-colors";
-import { ageLabel, isSeniorCat } from "@/lib/dates";
+import { isSeniorCat } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
 import { serializeCat } from "@/lib/serialize";
 import { getSessionUser } from "@/lib/session";
@@ -46,14 +47,13 @@ export default async function CatsPage() {
                   color={catColor(cat.id, ids).hex}
                   size="lg"
                 />
-                <div>
-                  <p className="font-extrabold">{cat.name}</p>
-                  <p className="text-sm text-ink-soft">
-                    {ageLabel(cat.birthDate) ?? "나이 미입력"}
-                    {cat.weightKg !== null ? ` · ${cat.weightKg.toFixed(2)}kg` : ""}
-                    {isSeniorCat(cat) ? " · 노묘 케어" : ""}
-                  </p>
-                </div>
+                <CatAgeDisplay
+                  variant="list"
+                  name={cat.name}
+                  birthDate={cat.birthDate}
+                  estimatedYears={cat.estimatedAgeYears}
+                  extra={catAgeExtra(cat, isSeniorCat(cat))}
+                />
               </Link>
             </li>
           ))}

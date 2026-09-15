@@ -22,7 +22,12 @@ export function ReportDocument({ report }: { report: BuiltReport }) {
         <h2 className="text-sm font-bold text-ink-soft">신원</h2>
         <ul className="mt-3 space-y-1 text-sm leading-7">
           {report.identity.map((line) => (
-            <li key={line}>{line}</li>
+            <li
+              key={line}
+              className={line.startsWith("나이") ? "text-xs leading-6 text-ink-soft" : undefined}
+            >
+              {line}
+            </li>
           ))}
         </ul>
       </section>

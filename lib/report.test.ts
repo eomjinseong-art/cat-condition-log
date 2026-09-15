@@ -7,6 +7,7 @@ const cat: PublicCat = {
   id: "c1",
   name: "치즈",
   birthDate: "2014-09-14",
+  estimatedAgeYears: null,
   weightKg: 5,
   photoUrl: null,
   notes: "중성화 완료",
@@ -43,6 +44,7 @@ describe("report", () => {
           completedAt: "2026-09-02T00:00:00.000Z",
         },
       ],
+      asOf: "2026-09-14",
     });
 
     assert.equal(report.catName, "치즈");
@@ -54,6 +56,8 @@ describe("report", () => {
     assert.equal(report.timeline[2]?.rows.find((row) => row[0] === "메모")?.[1], "병원 방문 예정");
     assert.match(report.identity.join("\n"), /노묘\/만성케어/);
     assert.match(report.identity.join("\n"), /만성신장병/);
+    assert.match(report.identity.join("\n"), /나이 12살 \(사람 나이 약 64세, 참고\)/);
+    assert.doesNotMatch(report.identity.join("\n"), /×7|수명|위험/);
     assert.equal(report.caregiverMemo, "중성화 완료");
   });
 

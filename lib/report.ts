@@ -1,5 +1,6 @@
 import { conditionLabels } from "@/lib/conditions";
-import { ageLabel, displayDate, displayShort, isSeniorCat, todayKey } from "@/lib/dates";
+import { formatReportAgeLine } from "@/lib/cat-age";
+import { displayDate, displayShort, isSeniorCat, todayKey } from "@/lib/dates";
 import {
   appetiteLabels,
   appetiteScore,
@@ -104,7 +105,11 @@ export function buildReport(input: ReportInput) {
 
   const identity = [
     `이름: ${cat.name}`,
-    `나이: ${ageLabel(cat.birthDate) ?? "미입력"}`,
+    formatReportAgeLine({
+      birthDate: cat.birthDate,
+      estimatedYears: cat.estimatedAgeYears,
+      asOf: today,
+    }),
     `최근 체중: ${lastWeight ? `${lastWeight.weightKg.toFixed(2)}kg` : cat.weightKg !== null ? `${cat.weightKg.toFixed(2)}kg` : "미입력"}`,
     `노묘/만성케어: ${senior ? "해당 (나이 또는 보호자 표시)" : "해당 없음"}`,
     `돌봄 태그: ${conditionText}`,

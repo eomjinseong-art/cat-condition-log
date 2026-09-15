@@ -15,6 +15,7 @@ export const loginSchema = z.object({
 export const catSchema = z.object({
   name: z.string().trim().min(1, "이름을 입력해 주세요.").max(30),
   birthDate: z.string().optional(),
+  estimatedAgeYears: z.string().optional(),
   weightKg: z.string().optional(),
   photoUrl: z.string().optional(),
   notes: z.string().max(500).optional(),

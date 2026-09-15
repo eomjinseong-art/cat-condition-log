@@ -2,12 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { CatAgeDisplay } from "@/components/cat-age-display";
+import { CatAgeField } from "@/components/cat-age-field";
 import { CatCareFields } from "@/components/cat-care-fields";
 import { GuestLoading } from "@/components/guest/guest-shell";
 import { GuestFeatureGate } from "@/components/guest/signup-prompt";
 import { PageHeader } from "@/components/ui";
 import { useGuestActions, useGuestHydrated } from "@/components/guest/guest-runtime";
 import { parseConditions, type CatCondition } from "@/lib/conditions";
+import { parseEstimatedAgeYears } from "@/lib/form-parse";
 import { canAddGuestCat } from "@/lib/guest-store";
 
 function parseWeight(value: string) {
@@ -65,6 +68,14 @@ export function GuestEditCatForm({ catId }: { catId: string }) {
   return (
     <>
       <PageHeader title={`${cat.name} 프로필`} subtitle="기록은 이 기기에 남아 있어요." />
+      <div className="card mb-4 p-4">
+        <CatAgeDisplay
+          variant="profile"
+          name={cat.name}
+          birthDate={cat.birthDate}
+          estimatedYears={cat.estimatedAgeYears}
+        />
+      </div>
       <GuestCatFields
         submitLabel="프로필 저장"
         initial={cat}
@@ -96,6 +107,7 @@ function GuestCatFields({
   initial?: {
     name: string;
     birthDate: string | null;
+    estimatedAgeYears?: number | null;
     weightKg: number | null;
     notes: string | null;
     seniorCare?: boolean;
@@ -105,6 +117,7 @@ function GuestCatFields({
   onSubmit: (input: {
     name: string;
     birthDate?: string | null;
+    estimatedAgeYears?: number | null;
     weightKg?: number | null;
     notes?: string | null;
     seniorCare?: boolean;
@@ -127,6 +140,7 @@ function GuestCatFields({
         onSubmit({
           name,
           birthDate: String(form.get("birthDate") ?? "") || null,
+          estimatedAgeYears: parseEstimatedAgeYears(form.get("estimatedAgeYears")),
           weightKg: parseWeight(String(form.get("weightKg") ?? "")),
           notes: String(form.get("notes") ?? "") || null,
           seniorCare: form.get("seniorCare") === "on",
@@ -138,10 +152,10 @@ function GuestCatFields({
         이름
         <input name="name" required maxLength={30} defaultValue={initial?.name ?? ""} className="field mt-1" placeholder="나비" />
       </label>
-      <label className="block text-sm font-bold">
-        생일 (선택)
-        <input name="birthDate" type="date" defaultValue={initial?.birthDate ?? ""} className="field mt-1" />
-      </label>
+      <CatAgeField
+        defaultBirthDate={initial?.birthDate ?? ""}
+        defaultEstimatedYears={initial?.estimatedAgeYears ?? null}
+      />
       <label className="block text-sm font-bold">
         체중 kg (선택, 0.01 단위)
         <input

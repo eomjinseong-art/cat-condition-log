@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { deleteCatAction, updateCatAction } from "@/app/actions/cats";
+import { CatAgeDisplay } from "@/components/cat-age-display";
+import { CatAgeField } from "@/components/cat-age-field";
 import { CatCareFields } from "@/components/cat-care-fields";
 import { ConfirmSubmit } from "@/components/confirm-submit";
 import { PageHeader } from "@/components/ui";
@@ -21,6 +23,14 @@ export default async function EditCatPage({ params }: { params: Promise<{ id: st
   return (
     <>
       <PageHeader title={`${cat.name} 프로필`} subtitle="기록과 일정도 함께 정리돼요." />
+      <div className="card mb-4 p-4">
+        <CatAgeDisplay
+          variant="profile"
+          name={cat.name}
+          birthDate={cat.birthDate}
+          estimatedYears={cat.estimatedAgeYears}
+        />
+      </div>
       <Link href="/care" className="card mb-4 block px-4 py-3 text-sm font-bold">
         약 · 재진 · 검사 기록 보기
       </Link>
@@ -29,10 +39,11 @@ export default async function EditCatPage({ params }: { params: Promise<{ id: st
           이름
           <input name="name" required defaultValue={cat.name} className="field mt-1" />
         </label>
-        <label className="block text-sm font-bold">
-          생일
-          <input name="birthDate" type="date" defaultValue={cat.birthDate ?? ""} className="field mt-1" />
-        </label>
+        <CatAgeField
+          birthLabel="생일"
+          defaultBirthDate={cat.birthDate ?? ""}
+          defaultEstimatedYears={cat.estimatedAgeYears}
+        />
         <label className="block text-sm font-bold">
           체중 kg
           <input

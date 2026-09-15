@@ -12,6 +12,7 @@ const guestCatSchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/)
     .nullable()
     .optional(),
+  estimatedAgeYears: z.number().int().min(0).max(40).nullable().optional(),
   weightKg: z.number().min(0.01).max(30).nullable().optional(),
   notes: z.string().max(500).nullable().optional(),
   seniorCare: z.boolean().optional(),
@@ -53,6 +54,7 @@ export type PlannedGuestCat = {
   guestId: string;
   name: string;
   birthDate: string | null;
+  estimatedAgeYears: number | null;
   weightKg: number | null;
   notes: string | null;
   seniorCare: boolean;
@@ -73,6 +75,7 @@ export function planGuestImport(payload: GuestImportPayload): {
     guestId: cat.id,
     name: cat.name,
     birthDate: cat.birthDate ?? null,
+    estimatedAgeYears: cat.estimatedAgeYears ?? null,
     weightKg: cat.weightKg ?? null,
     notes: cat.notes ?? null,
     seniorCare: Boolean(cat.seniorCare),
