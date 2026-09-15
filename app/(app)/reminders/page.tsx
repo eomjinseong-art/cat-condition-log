@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createReminderAction, deleteReminderAction, toggleReminderAction } from "@/app/actions/reminders";
 import { ConfirmSubmit } from "@/components/confirm-submit";
 import { EmptyState, PageHeader } from "@/components/ui";
@@ -21,7 +22,11 @@ export default async function RemindersPage() {
 
   return (
     <>
-      <PageHeader title="돌봄 일정" subtitle="약, 백신, 구충, 모래 전체갈이를 날짜에 맞춰 남겨 두세요." />
+      <PageHeader title="돌봄 일정" subtitle="백신, 구충, 모래 전체갈이처럼 날짜 한 번인 일정을 남겨 두세요." />
+      <Link href="/care" className="card mb-5 block px-4 py-3">
+        <p className="font-bold">매일 먹는 약 · 재진은 노묘 돌봄에서</p>
+        <p className="mt-1 text-sm text-ink-soft">줬어요 체크, 병원 일정, 검사 숫자를 따로 모아 두었어요.</p>
+      </Link>
       <form action={createReminderAction} className="card mb-5 space-y-3 p-4">
         <select name="type" className="field" defaultValue="MEDS">
           {Object.entries(reminderLabels).map(([key, label]) => (

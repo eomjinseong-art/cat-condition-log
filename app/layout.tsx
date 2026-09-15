@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import { PwaRegister } from "@/components/pwa-register";
-import { APP_NAME, APP_SHORT_NAME } from "@/lib/constants";
+import { APP_NAME, APP_NAME_EN, APP_SHORT_NAME } from "@/lib/constants";
 import "./globals.css";
 
 const noto = Noto_Sans_KR({
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     default: APP_NAME,
     template: `%s · ${APP_SHORT_NAME}`,
   },
-  description: "10초 습관으로 남기는 고양이 컨디션 기록과 병원 제출용 요약",
+  description: `${APP_NAME}(${APP_NAME_EN}) — 10초 습관으로 남기는 고양이 하루 기록과 병원 제출용 요약`,
   applicationName: APP_NAME,
   appleWebApp: {
     capable: true,

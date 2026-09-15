@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { CatCareFields } from "@/components/cat-care-fields";
 import { GuestLoading } from "@/components/guest/guest-shell";
 import { GuestFeatureGate } from "@/components/guest/signup-prompt";
 import { PageHeader } from "@/components/ui";
 import { useGuestActions, useGuestHydrated } from "@/components/guest/guest-runtime";
+import { parseConditions, type CatCondition } from "@/lib/conditions";
 import { canAddGuestCat } from "@/lib/guest-store";
 
 function parseWeight(value: string) {
@@ -91,13 +93,22 @@ function GuestCatFields({
   submitLabel,
   onSubmit,
 }: {
-  initial?: { name: string; birthDate: string | null; weightKg: number | null; notes: string | null };
+  initial?: {
+    name: string;
+    birthDate: string | null;
+    weightKg: number | null;
+    notes: string | null;
+    seniorCare?: boolean;
+    conditions?: CatCondition[];
+  };
   submitLabel: string;
   onSubmit: (input: {
     name: string;
     birthDate?: string | null;
     weightKg?: number | null;
     notes?: string | null;
+    seniorCare?: boolean;
+    conditions?: CatCondition[];
   }) => void;
 }) {
   const [error, setError] = useState("");
@@ -118,6 +129,8 @@ function GuestCatFields({
           birthDate: String(form.get("birthDate") ?? "") || null,
           weightKg: parseWeight(String(form.get("weightKg") ?? "")),
           notes: String(form.get("notes") ?? "") || null,
+          seniorCare: form.get("seniorCare") === "on",
+          conditions: parseConditions(form.getAll("conditions")),
         });
       }}
     >
@@ -150,6 +163,7 @@ function GuestCatFields({
           placeholder="중성화, 알러지 등"
         />
       </label>
+      <CatCareFields seniorCare={initial?.seniorCare} conditions={initial?.conditions} />
       {error ? <p className="text-sm text-rose">{error}</p> : null}
       <button className="btn-primary w-full" type="submit">
         {submitLabel}

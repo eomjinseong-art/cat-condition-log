@@ -1,26 +1,12 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { defaultCompareIds, metricPoints, toggleCompareId } from "./chart-series";
-import type { PublicLog } from "./serialize";
+import { emptyPublicLog, type PublicLog } from "./serialize";
 
 function log(partial: Partial<PublicLog>): PublicLog {
   return {
-    id: partial.id ?? "l",
-    catId: partial.catId ?? "c1",
-    loggedOn: partial.loggedOn ?? "2026-09-01",
-    appetite: partial.appetite ?? null,
-    foodNote: null,
-    water: null,
-    stoolCount: partial.stoolCount ?? null,
-    stoolQuality: null,
-    urine: null,
-    vomit: partial.vomit ?? null,
-    vomitNote: null,
-    vomitPhotoUrl: null,
-    energy: null,
-    weightKg: partial.weightKg ?? null,
-    memo: null,
-    photoUrl: null,
+    ...emptyPublicLog(partial.catId ?? "c1", partial.loggedOn ?? "2026-09-01", partial.id ?? "l"),
+    ...partial,
   };
 }
 

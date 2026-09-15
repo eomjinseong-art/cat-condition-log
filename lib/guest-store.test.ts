@@ -44,6 +44,39 @@ describe("guest-store", () => {
     assert.equal(parsed.logs[0]?.photoUrl, null);
     assert.equal(parsed.logs[0]?.vomitPhotoUrl, null);
     assert.equal(parsed.logs[0]?.appetite, "NORMAL");
+    assert.equal(parsed.cats[0]?.seniorCare, false);
+    assert.deepEqual(parsed.cats[0]?.conditions, []);
+  });
+
+  it("keeps senior care tags and optional senior log chips", () => {
+    const parsed = parseGuestSnapshot(
+      JSON.stringify({
+        cats: [
+          {
+            id: "cat_1",
+            name: "치즈",
+            birthDate: "2014-01-01",
+            seniorCare: true,
+            conditions: ["CKD", "nope"],
+          },
+        ],
+        logs: [
+          {
+            id: "log_1",
+            catId: "cat_1",
+            loggedOn: "2026-09-14",
+            waterChange: "MORE",
+            mobility: "STIFF",
+            nightVocal: "SOME",
+          },
+        ],
+      }),
+    );
+    assert.ok(parsed);
+    assert.equal(parsed.cats[0]?.seniorCare, true);
+    assert.deepEqual(parsed.cats[0]?.conditions, ["CKD"]);
+    assert.equal(parsed.logs[0]?.waterChange, "MORE");
+    assert.equal(parsed.logs[0]?.mobility, "STIFF");
   });
 
   it("caps guest cats at two", () => {

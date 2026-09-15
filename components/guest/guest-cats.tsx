@@ -6,7 +6,7 @@ import { GuestLoading, GuestLocalBanner } from "@/components/guest/guest-shell";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { useGuestActions, useGuestGate, useGuestHydrated } from "@/components/guest/guest-runtime";
 import { canAddGuestCat } from "@/lib/guest-store";
-import { ageLabel } from "@/lib/dates";
+import { ageLabel, isSeniorCat } from "@/lib/dates";
 
 export function GuestCats() {
   const router = useRouter();
@@ -56,6 +56,7 @@ export function GuestCats() {
                   <p className="text-sm text-ink-soft">
                     {ageLabel(cat.birthDate) ?? "나이 미입력"}
                     {cat.weightKg !== null ? ` · ${cat.weightKg.toFixed(2)}kg` : ""}
+                    {isSeniorCat(cat) ? " · 노묘 케어" : ""}
                   </p>
                 </div>
               </Link>

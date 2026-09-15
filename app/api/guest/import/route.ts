@@ -45,6 +45,8 @@ export async function POST(request: Request) {
             weightKg: cat.weightKg,
             photoUrl: null,
             notes: cat.notes,
+            seniorCare: cat.seniorCare,
+            conditions: cat.conditions,
           },
         });
         idMap.set(cat.guestId, created.id);
@@ -69,6 +71,10 @@ export async function POST(request: Request) {
             energy: log.energy ?? undefined,
             weightKg: log.weightKg,
             memo: log.memo,
+            waterChange: log.waterChange ?? undefined,
+            urineChange: log.urineChange ?? undefined,
+            mobility: log.mobility ?? undefined,
+            nightVocal: log.nightVocal ?? undefined,
             photoUrl: null,
             vomitPhotoUrl: null,
           },

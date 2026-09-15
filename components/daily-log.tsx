@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import { upsertLogAction } from "@/app/actions/logs";
 import { RelatedResources } from "@/components/partner-links";
+import { SeniorCheckSection } from "@/components/senior-check";
 import { ChipButton, SectionTitle } from "@/components/ui";
 import { todayKey } from "@/lib/dates";
 import { appetiteLabels, energyLabels, stoolLabels, urineLabels, waterLabels } from "@/lib/labels";
@@ -23,6 +24,10 @@ type Draft = {
   energy: PublicLog["energy"];
   weightKg: string;
   memo: string;
+  waterChange: PublicLog["waterChange"];
+  urineChange: PublicLog["urineChange"];
+  mobility: PublicLog["mobility"];
+  nightVocal: PublicLog["nightVocal"];
 };
 
 function fromLog(log: PublicLog | null): Draft {
@@ -38,6 +43,10 @@ function fromLog(log: PublicLog | null): Draft {
     energy: log?.energy ?? null,
     weightKg: log?.weightKg != null ? String(log.weightKg) : "",
     memo: log?.memo ?? "",
+    waterChange: log?.waterChange ?? null,
+    urineChange: log?.urineChange ?? null,
+    mobility: log?.mobility ?? null,
+    nightVocal: log?.nightVocal ?? null,
   };
 }
 
@@ -45,10 +54,12 @@ export function DailyLog({
   catId,
   loggedOn,
   initial,
+  senior,
 }: {
   catId: string;
   loggedOn: string;
   initial: PublicLog | null;
+  senior?: boolean;
 }) {
   const router = useRouter();
   const [draft, setDraft] = useState(() => fromLog(initial));
@@ -93,6 +104,10 @@ export function DailyLog({
           energy: draft.energy,
           weightKg,
           memo: draft.memo.trim() || null,
+          waterChange: draft.waterChange,
+          urineChange: draft.urineChange,
+          mobility: draft.mobility,
+          nightVocal: draft.nightVocal,
         });
         const nextDraft = fromLog(next);
         setDraft(nextDraft);
@@ -210,6 +225,17 @@ export function DailyLog({
           ))}
         </div>
       </section>
+
+      <SeniorCheckSection
+        emphasized={Boolean(senior)}
+        values={{
+          waterChange: draft.waterChange,
+          urineChange: draft.urineChange,
+          mobility: draft.mobility,
+          nightVocal: draft.nightVocal,
+        }}
+        onSelect={(key, value) => patch({ [key]: value })}
+      />
 
       <section className="card p-4">
         <SectionTitle>체중 (0.01kg)</SectionTitle>

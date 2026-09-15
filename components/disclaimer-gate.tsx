@@ -3,7 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { acceptDisclaimerAction } from "@/app/actions/auth";
-import { DISCLAIMER } from "@/lib/constants";
+import { APP_NAME, DISCLAIMER } from "@/lib/constants";
 
 export function DisclaimerGate() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export function DisclaimerGate() {
 
   return (
     <div className="card mx-auto w-full max-w-md p-5">
-      <p className="text-xs font-bold tracking-wide text-accent">꼭 읽어 주세요</p>
+      <p className="text-xs font-bold tracking-wide text-accent">{APP_NAME} · 꼭 읽어 주세요</p>
       <h1 className="mt-2 text-xl font-extrabold">기록 도구 안내</h1>
       <p className="mt-3 text-sm leading-7 text-ink-soft">{DISCLAIMER}</p>
       <form action={formAction} className="mt-5">

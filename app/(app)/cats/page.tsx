@@ -3,7 +3,7 @@ import { CatAvatar } from "@/components/cat-picker";
 import { GuestCats } from "@/components/guest/guest-cats";
 import { EmptyState, PageHeader } from "@/components/ui";
 import { catColor } from "@/lib/cat-colors";
-import { ageLabel } from "@/lib/dates";
+import { ageLabel, isSeniorCat } from "@/lib/dates";
 import { prisma } from "@/lib/prisma";
 import { serializeCat } from "@/lib/serialize";
 import { getSessionUser } from "@/lib/session";
@@ -51,6 +51,7 @@ export default async function CatsPage() {
                   <p className="text-sm text-ink-soft">
                     {ageLabel(cat.birthDate) ?? "나이 미입력"}
                     {cat.weightKg !== null ? ` · ${cat.weightKg.toFixed(2)}kg` : ""}
+                    {isSeniorCat(cat) ? " · 노묘 케어" : ""}
                   </p>
                 </div>
               </Link>

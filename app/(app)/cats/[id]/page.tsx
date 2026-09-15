@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { deleteCatAction, updateCatAction } from "@/app/actions/cats";
+import { CatCareFields } from "@/components/cat-care-fields";
 import { ConfirmSubmit } from "@/components/confirm-submit";
 import { PageHeader } from "@/components/ui";
 import { GuestEditCatForm } from "@/components/guest/guest-cat-form";
@@ -19,6 +21,9 @@ export default async function EditCatPage({ params }: { params: Promise<{ id: st
   return (
     <>
       <PageHeader title={`${cat.name} 프로필`} subtitle="기록과 일정도 함께 정리돼요." />
+      <Link href="/care" className="card mb-4 block px-4 py-3 text-sm font-bold">
+        약 · 재진 · 검사 기록 보기
+      </Link>
       <form action={updateCatAction.bind(null, cat.id)} className="card space-y-4 p-5">
         <label className="block text-sm font-bold">
           이름
@@ -43,6 +48,7 @@ export default async function EditCatPage({ params }: { params: Promise<{ id: st
           메모
           <textarea name="notes" defaultValue={cat.notes ?? ""} className="field mt-1 min-h-24" />
         </label>
+        <CatCareFields seniorCare={cat.seniorCare} conditions={cat.conditions} />
         <button className="btn-primary w-full" type="submit">
           프로필 저장
         </button>

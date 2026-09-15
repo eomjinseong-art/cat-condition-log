@@ -1,4 +1,4 @@
-import { TIMEZONE } from "@/lib/constants";
+import { SENIOR_AGE_YEARS, TIMEZONE } from "@/lib/constants";
 
 const kstDateFormatter = new Intl.DateTimeFormat("en-CA", {
   timeZone: TIMEZONE,
@@ -60,7 +60,7 @@ export function displayShort(value: Date | string): string {
   return `${Number(month)}/${Number(day)}`;
 }
 
-export function ageLabel(birthDate: Date | string | null | undefined, asOf = todayKey()): string | null {
+export function ageMonths(birthDate: Date | string | null | undefined, asOf = todayKey()): number | null {
   if (!birthDate) return null;
   const birthKey = formatDateKey(birthDate);
   const birth = dateFromKey(birthKey);
@@ -69,11 +69,34 @@ export function ageLabel(birthDate: Date | string | null | undefined, asOf = tod
     (asOfDate.getUTCFullYear() - birth.getUTCFullYear()) * 12 +
     (asOfDate.getUTCMonth() - birth.getUTCMonth());
   if (asOfDate.getUTCDate() < birth.getUTCDate()) months -= 1;
-  if (months < 0) return "0개월";
+  return months < 0 ? 0 : months;
+}
+
+export function ageLabel(birthDate: Date | string | null | undefined, asOf = todayKey()): string | null {
+  const months = ageMonths(birthDate, asOf);
+  if (months === null) return null;
   if (months < 12) return `${months}개월`;
   const years = Math.floor(months / 12);
   const rest = months % 12;
   return rest === 0 ? `${years}살` : `${years}살 ${rest}개월`;
+}
+
+export function isSeniorByAge(birthDate: Date | string | null | undefined, asOf = todayKey()): boolean {
+  const months = ageMonths(birthDate, asOf);
+  return months !== null && months >= SENIOR_AGE_YEARS * 12;
+}
+
+export function isSeniorCat(
+  cat: { birthDate?: Date | string | null; seniorCare?: boolean },
+  asOf = todayKey(),
+): boolean {
+  return Boolean(cat.seniorCare) || isSeniorByAge(cat.birthDate, asOf);
+}
+
+export function diffDays(fromKey: string, toKey: string): number {
+  const from = dateFromKey(fromKey).getTime();
+  const to = dateFromKey(toKey).getTime();
+  return Math.round((to - from) / 86_400_000);
 }
 
 export function monthGrid(year: number, monthIndex: number) {

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { registerAction } from "@/app/actions/auth";
 import { auth } from "@/auth";
 import { AuthForm } from "@/components/auth-form";
+import { APP_NAME, APP_NAME_EN } from "@/lib/constants";
 
 export default async function RegisterPage() {
   const session = await auth();
@@ -10,7 +11,10 @@ export default async function RegisterPage() {
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-5 py-10">
-      <h1 className="text-3xl font-black">회원가입</h1>
+      <p className="text-sm font-bold text-accent">
+        {APP_NAME} · {APP_NAME_EN}
+      </p>
+      <h1 className="mt-2 text-3xl font-black">회원가입</h1>
       <p className="mt-2 text-sm text-ink-soft">
         이메일만으로 바로 시작할 수 있어요. 이 기기에 남긴 기록은 계정으로 옮겨 드려요.
       </p>
