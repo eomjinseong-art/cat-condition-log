@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import { PwaRegister } from "@/components/pwa-register";
+import { VisitorCounter } from "@/components/visitor-counter";
 import { APP_NAME, APP_NAME_EN, APP_SHORT_NAME } from "@/lib/constants";
 import "./globals.css";
 
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="ko" className={`${noto.variable} h-full`}>
       <body className="min-h-full bg-paper font-sans text-ink antialiased">
         <PwaRegister />
+        <VisitorCounter />
         {children}
       </body>
     </html>
