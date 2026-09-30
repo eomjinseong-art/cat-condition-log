@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { DISCLAIMER } from "@/lib/constants";
 import { partners } from "@/lib/partners";
+import { CoupangBanner } from "@/components/coupang-banner";
 
 function ExternalLink({
   href,
@@ -50,6 +51,7 @@ export function PartnerLinks({
         <ExternalLink href={partners.shop.href}>{partners.shop.name}</ExternalLink>
         <span> — {partners.shop.blurb}</span>
       </p>
+      {variant === "footer" ? <CoupangBanner /> : null}
     </aside>
   );
 }
