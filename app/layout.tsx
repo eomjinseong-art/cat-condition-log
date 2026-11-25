@@ -1,3 +1,5 @@
+import Script from "next/script";
+import { NadooAd } from "@/components/NadooAd";
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import { PwaRegister } from "@/components/pwa-register";
@@ -44,6 +46,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <PwaRegister />
         <VisitorCounter />
         {children}
+        <NadooAd />
+        <Script src="https://nadoo-ads.vercel.app/ads.js" strategy="afterInteractive" />
       </body>
     </html>
   );
