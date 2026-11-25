@@ -16,6 +16,7 @@ const noto = Noto_Sans_KR({
 const description = `${APP_NAME}(${APP_NAME_EN}) — 10초 습관으로 남기는 고양이 하루 기록과 병원 제출용 요약`;
 
 export const metadata: Metadata = {
+  verification: { google: "LglMaYLzS6dacAPQ5ZgZdPgzdtfLbp_1Rk5vh3WNPlM" },
   metadataBase: new URL(SITE_URL),
   title: {
     default: APP_NAME,
